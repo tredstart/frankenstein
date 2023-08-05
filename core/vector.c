@@ -5,18 +5,9 @@
 #include "vector.h"
 #include <stdio.h>
 #include <stdlib.h>
-
-item *item__new(void *value) {
-  item *new_item = (item *)malloc(sizeof(item));
-  if (!new_item) {
-    printf("Error! Cannot create a new map");
-    exit(1);
-  }
-  new_item->next = NULL;
-  new_item->prev = NULL;
-  new_item->value = value;
-  return new_item;
-}
+item *item__new(void *value);
+item *item__add(item *self, void *value);
+void item__drop(item *self);
 
 vector *vector__new(void *value) {
   vector *new_v = (vector *)malloc(sizeof(vector));
@@ -30,15 +21,15 @@ vector *vector__new(void *value) {
   return new_v;
 }
 
-item *item__add(item *self, void *value) {
-  if (self->next) {
-    printf("Error! Not the last item");
+item *item__new(void *value) {
+  item *new_item = (item *)malloc(sizeof(item));
+  if (!new_item) {
+    printf("Error! Cannot create a new map");
     exit(1);
   }
-  item *new = item__new(value);
-  self->next = new;
-  new->prev = self;
-  return new;
+  new_item->next = NULL;
+  new_item->value = value;
+  return new_item;
 }
 
 void vector__add(vector *self, void *value) {
@@ -47,11 +38,14 @@ void vector__add(vector *self, void *value) {
   self->count++;
 }
 
-void item__drop(item *self) {
-  if (self) {
-    free(self);
-    self = NULL;
+item *item__add(item *self, void *value) {
+  if (self->next) {
+    printf("Error! Not the last item");
+    exit(1);
   }
+  item *new = item__new(value);
+  self->next = new;
+  return new;
 }
 
 void vector__drop(vector *self) {
@@ -67,6 +61,14 @@ void vector__drop(vector *self) {
   free(self);
   self = NULL;
 }
+
+void item__drop(item *self) {
+  if (self) {
+    free(self);
+    self = NULL;
+  }
+}
+
 
 void *vector__get(vector *self, uint64_t index) {
   if (index >= self->count) {
