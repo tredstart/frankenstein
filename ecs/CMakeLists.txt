@@ -1,0 +1,1 @@
+target_sources(c_engine PRIVATE components.c components.h systems.c systems.h)

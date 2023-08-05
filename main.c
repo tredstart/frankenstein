@@ -1,5 +1,5 @@
-#include "systems.h"
-#include "vector.h"
+#include "ecs/systems.h"
+#include "core/vector.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_render.h>

@@ -6,7 +6,7 @@
 #define C_ENGINE_SYSTEMS_H
 
 #include "components.h"
-#include "vector.h"
+#include "../core/vector.h"
 #include <SDL2/SDL.h>
 #include <stddef.h>
 void render_system(vector *components, SDL_Renderer *renderer);
