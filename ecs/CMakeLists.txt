@@ -1,1 +1,1 @@
-target_sources(frankenstein PRIVATE components.c components.h systems.c systems.h)
+target_sources(frankenstein PUBLIC components.c components.h systems.c systems.h)

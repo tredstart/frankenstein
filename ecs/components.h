@@ -30,7 +30,7 @@ typedef enum {
   POSITION,
   SPRITE,
 
-  ENUM_LENGTH
+  COMPONENTS_COUNT
 } components_e;
 
 #endif // !COMPONENTS_H

@@ -10,7 +10,7 @@ void drop_all(vector *self);
 void throw_error(const char *);
 
 vector *vector__new(void *value) {
-  vector *new_v = (vector *)malloc(sizeof(vector));
+  vector *new_v = (vector *)calloc(1, sizeof(vector));
   if (!new_v)
     throw_error("Error! Cannot create a new vector");
   new_v->first = item__new(value);
@@ -20,7 +20,7 @@ vector *vector__new(void *value) {
 }
 
 item *item__new(void *value) {
-  item *new_item = (item *)malloc(sizeof(item));
+  item *new_item = (item *)calloc(1, sizeof(*new_item));
   if (!new_item)
     throw_error("Error! Cannot create a new map");
   new_item->next = NULL;

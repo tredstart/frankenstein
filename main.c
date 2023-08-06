@@ -1,5 +1,6 @@
 #include "ecs/systems.h"
 #include "core/vector.h"
+#include "engine/engine.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_render.h>
@@ -19,21 +20,13 @@ int main() {
   SDL_CreateWindowAndRenderer(WIDTH, HEIGHT, SDL_WINDOW_SHOWN, &screen,
                               &renderer);
 
-  sprite_component_t c1;
-  sprite_component_t c2;
-  create_empty_rectangle(&c1, 1);
-  create_empty_rectangle(&c2, 2);
-  c2.position.x += 10;
-
-  vector *components[ENUM_LENGTH];
-  components[SPRITE] = vector__new(&c1);
-  vector__add(components[SPRITE], &c2);
+  engine_s *engine = engine__new();
 
   for (int i = 0; i < 10000; i++) {
-    render_system(components[SPRITE], renderer);
+    systems_update(engine);
     SDL_RenderPresent(renderer);
   }
-  vector__drop(components[SPRITE]);
+  vector__drop(engine->components[SPRITE]);
   SDL_DestroyRenderer(renderer);
   SDL_DestroyWindow(screen);
   // Quit SDL

@@ -2,9 +2,12 @@
 // Created by redstart on 8/3/23.
 //
 #include "systems.h"
+#include "../engine/engine.h"
 
-void render_system(vector *components, SDL_Renderer *renderer) {
-
+void render_system(void *context) {
+  engine_s *engine = (engine_s*) context;
+  vector *components = engine->components[SPRITE];
+  SDL_Renderer *renderer = engine->renderer;
   for (int i = 0; i < components->count; ++i) {
     sprite_component_t *sprite = (sprite_component_t *) vector__get(components, i);
     SDL_Rect rect;
@@ -17,6 +20,12 @@ void render_system(vector *components, SDL_Renderer *renderer) {
     sprite->position.x += 10;
     sprite->position.y += 10;
   }
+}
+
+systems_i *systems__new(systems_i *self, void (*update_func)) {
+  self = (systems_i*)calloc(1, sizeof(*self));
+  self->update = update_func;
+  return self;
 }
 
 void create_empty_rectangle(sprite_component_t *component, int entity_id) {

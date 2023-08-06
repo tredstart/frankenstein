@@ -1,1 +1,1 @@
-target_sources(frankenstein PRIVATE engine.c engine.h)
+target_sources(frankenstein PUBLIC engine.c engine.h)
