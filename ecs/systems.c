@@ -28,6 +28,13 @@ systems_i *systems__new(systems_i *self, void (*update_func)) {
   return self;
 }
 
+void systems__drop(systems_i *self){
+  if (self){
+    free(self);
+    self = NULL;
+  }
+}
+
 void create_empty_rectangle(sprite_component_t *component, int entity_id) {
   component->size.width = 100;
   component->size.height = 100;

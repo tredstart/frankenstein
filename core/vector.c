@@ -43,12 +43,15 @@ item *item__add(item *self, void *value) {
 }
 
 void vector__drop(vector *self) {
-  drop_all(self);
-  self->count = 0;
-  self->first = NULL;
-  self->last = NULL;
-  free(self);
-  self = NULL;
+  if (self){
+    drop_all(self);
+    self->count = 0;
+    self->first = NULL;
+    self->last = NULL;
+    free(self);
+    self = NULL;
+  }
+
 }
 
 void drop_all(vector *self) {

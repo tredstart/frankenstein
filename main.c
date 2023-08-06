@@ -12,24 +12,28 @@
 #define HEIGHT 720
 
 int main() {
-  SDL_Window *screen = NULL;
-  SDL_Renderer *renderer;
-  SDL_Event event;
 
-  SDL_Init(SDL_INIT_EVERYTHING);
-  SDL_CreateWindowAndRenderer(WIDTH, HEIGHT, SDL_WINDOW_SHOWN, &screen,
-                              &renderer);
 
   engine_s *engine = engine__new();
+  sprite_component_t c1;
+  sprite_component_t c2;
+  create_empty_rectangle(&c1, 1);
+  create_empty_rectangle(&c2, 2);
+  c2.position.x += 10;
 
+
+
+  engine->components[SPRITE] = vector__new(&c1);
+  vector__add(engine->components[SPRITE], &c2);
   for (int i = 0; i < 10000; i++) {
     systems_update(engine);
-    SDL_RenderPresent(renderer);
+    SDL_RenderPresent(engine->renderer);
   }
-  vector__drop(engine->components[SPRITE]);
-  SDL_DestroyRenderer(renderer);
-  SDL_DestroyWindow(screen);
+
+  SDL_DestroyRenderer(engine->renderer);
+  SDL_DestroyWindow(engine->screen);
   // Quit SDL
+  engine__drop(engine);
   SDL_Quit();
 
   return 0;

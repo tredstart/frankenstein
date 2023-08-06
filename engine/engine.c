@@ -16,15 +16,22 @@ void systems_update(void *engine) {
 engine_s *engine__new() {
   engine_s *engine = (engine_s*) calloc(1, sizeof(*engine));
 
-  sprite_component_t c1;
-  sprite_component_t c2;
-  create_empty_rectangle(&c1, 1);
-  create_empty_rectangle(&c2, 2);
-  c2.position.x += 10;
+  engine->screen = NULL;
 
-
+  SDL_Init(SDL_INIT_EVERYTHING);
+  SDL_CreateWindowAndRenderer(WIDTH, HEIGHT, SDL_WINDOW_SHOWN, &engine->screen,
+                              &engine->renderer);
   engine->systems[RENDER] = systems__new(engine->systems[RENDER], &render_system);
-  engine->components[SPRITE] = vector__new(&c1);
-  vector__add(engine->components[SPRITE], &c2);
   return engine;
+}
+
+void engine__drop(engine_s *self) {
+  for (int i = 0; i < COMPONENTS_COUNT; ++i) {
+    vector__drop(self->components[i]);
+  }
+  for (int i = 0; i < SYSTEMS_COUNT; ++i) {
+    systems__drop(self->systems[i]);
+  }
+  free(self);
+  self = NULL;
 }
