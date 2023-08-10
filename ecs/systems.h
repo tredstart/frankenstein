@@ -12,6 +12,7 @@
 
 typedef enum {
   RENDER,
+  PHYSICS,
   SYSTEMS_COUNT,
 } systems_e;
 
@@ -24,7 +25,11 @@ systems_i *systems__new(systems_i *self, void(*update_func));
 void systems__drop(systems_i *self);
 
 void render_system(void *context, float dt);
+void physics_system(void *context, float dt);
 
 sprite_component_t *create_empty_rectangle(int entity_id);
+
+bool collides(collider_component_t *collider1,
+              collider_component_t *collider2);
 
 #endif // FRANKENSTEIN_SYSTEMS_H

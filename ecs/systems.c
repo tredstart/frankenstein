@@ -40,11 +40,26 @@ void render_system(void *context, float dt) {
 /* [WIP] */
 void physics_system(void *context, float dt) {
   engine_s *engine = context;
-  vector *components = engine->components[COLLIDER];
+  vector *components = engine->components[PHYSICS_BODY];
+  for (int i = 0; i < components->count - 1; ++i) {
+    for (int j = 1; j < components->count; ++j) {
+      collider_component_t *collider1 = vector__get(components, i);
+      collider_component_t *collider2 = vector__get(components, j);
+      if (collides(collider1, collider2)) {
+        // Find entity, get transform. Apply changes to its position and velocity.
+        printf("collision found\n");
+      }
+    }
+  }
 }
 
-void collides(collider_component_t *collider1,
-              collider_component_t *collider2);
+bool collides(collider_component_t *collider1,
+              collider_component_t *collider2) {
+  return (collider1->rect.x < collider2->rect.x + collider2->rect.w &&
+         collider1->rect.x + collider1->rect.w > collider2->rect.x &&
+         collider1->rect.y < collider2->rect.y + collider2->rect.h &&
+         collider1->rect.y + collider1->rect.h > collider2->rect.y);
+}
 
 // todo remove this later
 sprite_component_t *create_empty_rectangle(int entity_id) {

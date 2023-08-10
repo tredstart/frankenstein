@@ -89,7 +89,16 @@ void item__drop(item *self) {
   }
 }
 
-// Get item with a component at index
+/** Get item with a component at index
+ * @example
+ * @code
+ * vector *components = engine->components[SPRITE];
+ * sprite_component_t *sprite = vector__get(components, i);
+ * @endcode
+ * @attention
+ * Heavy operation. Consider making a resizable hash table here.
+ * https://stackoverflow.com/questions/22437416/best-way-to-resize-a-hash-table
+**/
 void *vector__get(vector *self, uint64_t index) {
   if (index >= self->count)
     throw_error("Error! Index is out of bounds");

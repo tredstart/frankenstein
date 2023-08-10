@@ -30,13 +30,21 @@ engine_s *engine__new() {
   sprite_component_t *c2 = create_empty_rectangle(2);
   c2->position.x += 10;
 
+  SDL_Rect rect1 = {.x = c1->position.x, .y = c1->position.y, .w = c1->size.width, .h = c1->size.height };
+  SDL_Rect rect2 = {.x = c2->position.x, .y = c2->position.y, .w = c2->size.width, .h = c2->size.height };
+  physics_body_component_t *cc1 = components__new_physics_body(&rect1, false, 1);
+  physics_body_component_t *cc2 = components__new_physics_body(&rect2, false, 2);
+
   engine__add_component(engine, c1, SPRITE);
   engine__add_component(engine, c2, SPRITE);
+  engine__add_component(engine, cc1, PHYSICS_BODY);
+  engine__add_component(engine, cc2, PHYSICS_BODY);
 
   SDL_Init(SDL_INIT_EVERYTHING);
   SDL_CreateWindowAndRenderer(WIDTH, HEIGHT, SDL_WINDOW_SHOWN, &engine->screen,
                               &engine->renderer);
   engine__add_system(engine, engine->systems[RENDER], RENDER, &render_system);
+  engine__add_system(engine, engine->systems[PHYSICS], PHYSICS, &physics_system);
   return engine;
 }
 
@@ -44,6 +52,7 @@ void engine__drop(engine_s *self) {
   for (int i = 0; i < COMPONENTS_COUNT; ++i)
     vector__drop(self->components[i]);
 
+  // todo: move it to general func
   for (int i = 0; i < SYSTEMS_COUNT; ++i)
     systems__drop(self->systems[i]);
 

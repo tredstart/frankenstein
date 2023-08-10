@@ -25,6 +25,9 @@ typedef struct {
   float radius;
 } circle_t;
 
+/* [WIP] */
+/* if there is need to render out the collider, SDL_rect is easy to pass */
+/* it is topic to consider */
 typedef struct {
   SDL_Rect rect;
   circle_t circle;
@@ -60,7 +63,6 @@ typedef struct {
 
 typedef enum {
   SIZE = 0,
-  COLLIDER,
   TRANSFORM,
   SPRITE,
   PHYSICS_BODY,
