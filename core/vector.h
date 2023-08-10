@@ -20,7 +20,11 @@ typedef struct {
 } vector;
 
 vector *vector__new(void *value);
+
 void vector__add(vector *self, void *new);
+
 void vector__drop(vector *self);
+
 void *vector__get(vector *self, uint64_t index);
+
 #endif // VECTOR_H

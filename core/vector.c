@@ -2,12 +2,16 @@
 // Created by redstart on 8/3/23.
 //
 #include "vector.h"
+#include "utils.h"
 #include <stdlib.h>
+
 item *item__new(void *value);
+
 item *item__add(item *self, void *value);
+
 void item__drop(item *self);
+
 void drop_all(vector *self);
-void throw_error(const char *);
 
 /** Create a vector with a new component
  * @example
@@ -17,7 +21,7 @@ void throw_error(const char *);
  * @endcode
  **/
 vector *vector__new(void *value) {
-  vector *new_v = (vector *)calloc(1, sizeof(vector));
+  vector *new_v = calloc(1, sizeof(vector));
   if (!new_v)
     throw_error("Error! Cannot create a new vector");
   new_v->first = item__new(value);
@@ -27,7 +31,7 @@ vector *vector__new(void *value) {
 }
 
 item *item__new(void *value) {
-  item *new_item = (item *)calloc(1, sizeof(*new_item));
+  item *new_item = calloc(1, sizeof(*new_item));
   if (!new_item)
     throw_error("Error! Cannot create a new map");
   new_item->next = NULL;
@@ -58,15 +62,13 @@ item *item__add(item *self, void *value) {
 
 // Clear vector from memory
 void vector__drop(vector *self) {
-  if (self){
+  if (self) {
     drop_all(self);
     self->count = 0;
     self->first = NULL;
     self->last = NULL;
-    free(self);
-    self = NULL;
+    delete(self);
   }
-
 }
 
 void drop_all(vector *self) {
@@ -80,8 +82,10 @@ void drop_all(vector *self) {
 
 void item__drop(item *self) {
   if (self) {
-    free(self);
-    self = NULL;
+    if (self->value) {
+      delete(self->value);
+    }
+    delete(self);
   }
 }
 
