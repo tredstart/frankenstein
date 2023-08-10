@@ -9,12 +9,13 @@ void item__drop(item *self);
 void drop_all(vector *self);
 void throw_error(const char *);
 
-/* Create a vector with a new component
- * Example:
- *
+/** Create a vector with a new component
+ * @example
+ * @code
  * sprite_component_t c1;
  * vector *v = vector__new(&c1);
- */
+ * @endcode
+ **/
 vector *vector__new(void *value) {
   vector *new_v = (vector *)calloc(1, sizeof(vector));
   if (!new_v)
@@ -34,12 +35,13 @@ item *item__new(void *value) {
   return new_item;
 }
 
-/* Add existing component to a vector
- * Example:
- *
+/** Add existing component to a vector
+ * @example
+ * @code
  * sprite_component_t c1;
  * vector__add(v, &c1);
- */
+ * @endcode
+ **/
 void vector__add(vector *self, void *value) {
   item *new = item__add(self->last, value);
   self->last = new;

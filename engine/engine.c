@@ -7,11 +7,11 @@
 
 #define WIDTH 1024
 #define HEIGHT 720
-void systems_update(void *engine) {
+void systems_update(void *engine, float dt) {
   engine_s *self = (engine_s *)engine;
   for (int i = 0; i < SYSTEMS_COUNT; ++i) {
     systems_i *system = self->systems[i];
-    system->update(self);
+    system->update(self, dt);
   }
 }
 
@@ -28,22 +28,21 @@ engine_s *engine__new() {
 }
 
 void engine__drop(engine_s *self) {
-  for (int i = 0; i < COMPONENTS_COUNT; ++i) {
+  for (int i = 0; i < COMPONENTS_COUNT; ++i)
     vector__drop(self->components[i]);
-  }
-  for (int i = 0; i < SYSTEMS_COUNT; ++i) {
+
+  for (int i = 0; i < SYSTEMS_COUNT; ++i)
     systems__drop(self->systems[i]);
-  }
+
   free(self);
   self = NULL;
 }
 
 void engine__add_component(engine_s *self, void *component, components_e index) {
-  if (self->components[index]){
+  if (self->components[index])
     vector__add(self->components[index], component);
-  }else {
+  else
     self->components[index] = vector__new(component);
-  }
 }
 
 void engine__add_system(engine_s *self, systems_i *system, systems_e index, void (*update_func)) {

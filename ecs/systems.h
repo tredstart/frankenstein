@@ -15,11 +15,11 @@ typedef enum {
 } systems_e;
 
 typedef struct {
-  void (*update)(void *);
+  void (*update)(void *, float);
 } systems_i;
 
 systems_i * systems__new(systems_i *self, void (*update_func));
 void systems__drop(systems_i *self);
-void render_system(void *context);
+void render_system(void *context, float dt);
 void create_empty_rectangle(sprite_component_t *component, int entity_id);
 #endif // FRANKENSTEIN_SYSTEMS_H

@@ -27,7 +27,7 @@ int main() {
   for (int i = 0; i < 60; i++) {
     SDL_SetRenderDrawColor( engine->renderer, 0xFF, 0xFF, 0xFF, 0xFF );
     SDL_RenderClear(engine->renderer);
-    systems_update(engine);
+    systems_update(engine, 1);
     SDL_RenderPresent(engine->renderer);
     usleep(15000);
   }

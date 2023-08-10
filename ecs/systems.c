@@ -4,7 +4,22 @@
 #include "systems.h"
 #include "../engine/engine.h"
 
-void render_system(void *context) {
+/* Create a new system with an update function */
+systems_i *systems__new(systems_i *self, void (*update_func)) {
+  self = (systems_i*)calloc(1, sizeof(*self));
+  self->update = update_func;
+  return self;
+}
+
+/* remove allocated system from memory */
+void systems__drop(systems_i *self){
+  if (self){
+    free(self);
+    self = NULL;
+  }
+}
+
+void render_system(void *context, float dt) {
   engine_s *engine = (engine_s*) context;
   vector *components = engine->components[SPRITE];
   SDL_Renderer *renderer = engine->renderer;
@@ -21,18 +36,16 @@ void render_system(void *context) {
     sprite->position.y += 10;
   }
 }
-/* Create a new system with an update function */
-systems_i *systems__new(systems_i *self, void (*update_func)) {
-  self = (systems_i*)calloc(1, sizeof(*self));
-  self->update = update_func;
-  return self;
+
+/* [WIP] */
+void physics_system(void *context, float dt) {
+  engine_s *engine = (engine_s*) context;
+  vector *components = engine->components[COLLIDER];
+
 }
 
-void systems__drop(systems_i *self){
-  if (self){
-    free(self);
-    self = NULL;
-  }
+void collides(collider_component_t *collider1, collider_component_t *collider2) {
+
 }
 
 void create_empty_rectangle(sprite_component_t *component, int entity_id) {
