@@ -17,6 +17,8 @@ typedef struct {
   systems_i *systems[SYSTEMS_COUNT];
 } engine_s;
 engine_s *engine__new();
+void engine__add_component(engine_s *self, void *component, components_e index);
+void engine__add_system(engine_s *self, systems_i *system, systems_e index, void (*update_func));
 void engine__drop(engine_s *);
 void systems_update(void *engine);
 #endif //FRANKENSTEIN_ENGINE_H

@@ -9,6 +9,12 @@ void item__drop(item *self);
 void drop_all(vector *self);
 void throw_error(const char *);
 
+/* Create a vector with a new component
+ * Example:
+ *
+ * sprite_component_t c1;
+ * vector *v = vector__new(&c1);
+ */
 vector *vector__new(void *value) {
   vector *new_v = (vector *)calloc(1, sizeof(vector));
   if (!new_v)
@@ -28,6 +34,12 @@ item *item__new(void *value) {
   return new_item;
 }
 
+/* Add existing component to a vector
+ * Example:
+ *
+ * sprite_component_t c1;
+ * vector__add(v, &c1);
+ */
 void vector__add(vector *self, void *value) {
   item *new = item__add(self->last, value);
   self->last = new;
@@ -42,6 +54,7 @@ item *item__add(item *self, void *value) {
   return new;
 }
 
+// Clear vector from memory
 void vector__drop(vector *self) {
   if (self){
     drop_all(self);
@@ -70,6 +83,7 @@ void item__drop(item *self) {
   }
 }
 
+// Get item with a component at index
 void *vector__get(vector *self, uint64_t index) {
   if (index >= self->count)
     throw_error("Error! Index is out of bounds");

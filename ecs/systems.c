@@ -21,7 +21,7 @@ void render_system(void *context) {
     sprite->position.y += 10;
   }
 }
-
+/* Create a new system with an update function */
 systems_i *systems__new(systems_i *self, void (*update_func)) {
   self = (systems_i*)calloc(1, sizeof(*self));
   self->update = update_func;
