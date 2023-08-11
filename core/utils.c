@@ -3,8 +3,6 @@
 //
 
 #include "utils.h"
-#include <stdio.h>
-#include <stdlib.h>
 
 void throw_error(const char *msg) {
   printf("%s\n", msg);

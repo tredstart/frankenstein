@@ -7,6 +7,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include "../core/utils.h"
 
 typedef struct item {
   void *value;

@@ -3,18 +3,6 @@
 //
 
 #include "engine.h"
-#include "../core/utils.h"
-
-#define WIDTH 1024
-#define HEIGHT 720
-
-void systems_update(void *engine, float dt) {
-  engine_s *self = engine;
-  for (int i = 0; i < SYSTEMS_COUNT; ++i) {
-    systems_i *system = self->systems[i];
-    system->update(self, dt);
-  }
-}
 
 engine_s *engine__new() {
   engine_s *engine = calloc(1, sizeof(*engine));
@@ -43,19 +31,13 @@ engine_s *engine__new() {
   SDL_Init(SDL_INIT_EVERYTHING);
   SDL_CreateWindowAndRenderer(WIDTH, HEIGHT, SDL_WINDOW_SHOWN, &engine->screen,
                               &engine->renderer);
-  engine__add_system(engine, engine->systems[RENDER], RENDER, &render_system);
-  engine__add_system(engine, engine->systems[PHYSICS], PHYSICS, &physics_system);
+
   return engine;
 }
 
 void engine__drop(engine_s *self) {
   for (int i = 0; i < COMPONENTS_COUNT; ++i)
     vector__drop(self->components[i]);
-
-  // todo: move it to general func
-  for (int i = 0; i < SYSTEMS_COUNT; ++i)
-    systems__drop(self->systems[i]);
-
   delete(self);
 }
 
@@ -67,10 +49,10 @@ void engine__add_component(engine_s *self, void *component,
     self->components[index] = vector__new(component);
 }
 
-void engine__add_system(engine_s *self, systems_i *system, systems_e index,
-                        void(*update_func)) {
-  if (!self->systems[index])
-    self->systems[index] = systems__new(system, update_func);
-  else
-    throw_error("Error! Cannot change existing system.");
+// todo remove this later
+sprite_component_t *create_empty_rectangle(int entity_id) {
+  position_component_t pos = {.x = 10, .y = 10};
+  size_component_t size = {.width = 100, .height = 100};
+  sprite_component_t *component = components__new_sprite(pos, size, entity_id, NULL);
+  return component;
 }

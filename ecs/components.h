@@ -2,25 +2,26 @@
 
 #include <SDL2/SDL_rect.h>
 #include <stdbool.h>
+#include "../core/utils.h"
 /*  Not standalone components  */
 //
 
-typedef struct {
+typedef struct size_component_t {
   int width;
   int height;
 } size_component_t;
 
-typedef struct {
+typedef struct position_component_t {
   int x;
   int y;
 } position_component_t;
 
-typedef struct {
+typedef struct velocity_component_t {
   int x;
   int y;
 } velocity_component_t;
 
-typedef struct {
+typedef struct circle_t {
   position_component_t position;
   float radius;
 } circle_t;
@@ -28,7 +29,7 @@ typedef struct {
 /* [WIP] */
 /* if there is need to render out the collider, SDL_rect is easy to pass */
 /* it is topic to consider */
-typedef struct {
+typedef struct collider_component_t {
   SDL_Rect rect;
   circle_t circle;
 } collider_component_t;
@@ -39,20 +40,20 @@ typedef struct {
 /* Standalone components */
 //
 
-typedef struct {
+typedef struct sprite_component_t {
   position_component_t position;
   size_component_t size;
   int entity_id;
   char *texture;
 } sprite_component_t;
 
-typedef struct {
+typedef struct physics_body_component_t {
   collider_component_t collider;
   bool is_circular;
   int entity_id;
 } physics_body_component_t;
 
-typedef struct {
+typedef struct transform_component_t {
   position_component_t position;
   velocity_component_t velocity;
   int entity_id;

@@ -5,31 +5,18 @@
 #ifndef FRANKENSTEIN_SYSTEMS_H
 #define FRANKENSTEIN_SYSTEMS_H
 
-#include "../core/vector.h"
-#include "components.h"
 #include <SDL2/SDL.h>
 #include <stddef.h>
+#include "consts.h"
+#include "../engine/engine.h"
 
-typedef enum {
-  RENDER,
-  PHYSICS,
-  SYSTEMS_COUNT,
-} systems_e;
-
-typedef struct {
-  void (*update)(void *, float);
-} systems_i;
-
-systems_i *systems__new(systems_i *self, void(*update_func));
-
-void systems__drop(systems_i *self);
+void systems__update(void *engine, float dt);
 
 void render_system(void *context, float dt);
 void physics_system(void *context, float dt);
 
-sprite_component_t *create_empty_rectangle(int entity_id);
-
 bool collides(collider_component_t *collider1,
               collider_component_t *collider2);
+
 
 #endif // FRANKENSTEIN_SYSTEMS_H

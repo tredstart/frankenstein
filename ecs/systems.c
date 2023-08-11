@@ -2,25 +2,14 @@
 // Created by redstart on 8/3/23.
 //
 #include "systems.h"
-#include "../engine/engine.h"
-#include "../core/utils.h"
 
-/* Create a new system with an update function */
-systems_i *systems__new(systems_i *self, void(*update_func)) {
-  self = calloc(1, sizeof(*self));
-  self->update = update_func;
-  return self;
-}
-
-/* remove allocated system from memory */
-void systems__drop(systems_i *self) {
-  if (self) {
-    delete(self);
-  }
-}
+void (*SYSTEMS[SYSTEMS_COUNT])(void *engine, float dt) = {
+    &render_system,
+    &physics_system
+};
 
 void render_system(void *context, float dt) {
-  engine_s *engine = (engine_s *) context;
+  engine_s *engine = context;
   vector *components = engine->components[SPRITE];
   SDL_Renderer *renderer = engine->renderer;
   for (int i = 0; i < components->count; ++i) {
@@ -61,10 +50,8 @@ bool collides(collider_component_t *collider1,
          collider1->rect.y + collider1->rect.h > collider2->rect.y);
 }
 
-// todo remove this later
-sprite_component_t *create_empty_rectangle(int entity_id) {
-  position_component_t pos = {.x = 10, .y = 10};
-  size_component_t size = {.width = 100, .height = 100};
-  sprite_component_t *component = components__new_sprite(pos, size, entity_id, NULL);
-  return component;
+
+void systems__update(void *engine, float dt) {
+  for (int i = 0; i < SYSTEMS_COUNT; ++i)
+    (*SYSTEMS[i])(engine, dt);
 }

@@ -1,5 +1,4 @@
 #include "components.h"
-#include "../core/utils.h"
 
 sprite_component_t *components__new_sprite(
     position_component_t position,

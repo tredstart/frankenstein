@@ -2,8 +2,6 @@
 // Created by redstart on 8/3/23.
 //
 #include "vector.h"
-#include "utils.h"
-#include <stdlib.h>
 
 item *item__new(void *value);
 
