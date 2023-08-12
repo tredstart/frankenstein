@@ -3,6 +3,7 @@
 #include <SDL2/SDL_rect.h>
 #include <stdbool.h>
 #include "../core/utils.h"
+#include "entity.h"
 /*  Not standalone components  */
 //
 
@@ -43,24 +44,24 @@ typedef struct collider_component_t {
 typedef struct sprite_component_t {
   position_component_t position;
   size_component_t size;
-  int entity_id;
+  entity_t entity_id;
   char *texture;
 } sprite_component_t;
 
 typedef struct physics_body_component_t {
   collider_component_t collider;
   bool is_circular;
-  int entity_id;
+  entity_t entity_id;
 } physics_body_component_t;
 
 typedef struct transform_component_t {
   position_component_t position;
   velocity_component_t velocity;
-  int entity_id;
+  entity_t entity_id;
 } transform_component_t;
 
 //
-/* End of not standalone components */
+/* End of standalone components */
 
 typedef enum {
   SIZE = 0,
@@ -74,14 +75,14 @@ typedef enum {
 sprite_component_t *components__new_sprite(
     position_component_t position,
     size_component_t size,
-    int entity_id,
+    entity_t entity_id,
     char *texture
 );
 
 physics_body_component_t *components__new_physics_body(
     void *shape,
     bool is_circular,
-    int entity_id
+    entity_t entity_id
 );
 
 

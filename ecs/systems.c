@@ -2,7 +2,6 @@
 // Created by redstart on 8/3/23.
 //
 #include "systems.h"
-
 void (*SYSTEMS[SYSTEMS_COUNT])(void *engine, float dt) = {
     &render_system,
     &physics_system
@@ -44,10 +43,13 @@ void physics_system(void *context, float dt) {
 
 bool collides(collider_component_t *collider1,
               collider_component_t *collider2) {
-  return (collider1->rect.x < collider2->rect.x + collider2->rect.w &&
-         collider1->rect.x + collider1->rect.w > collider2->rect.x &&
-         collider1->rect.y < collider2->rect.y + collider2->rect.h &&
-         collider1->rect.y + collider1->rect.h > collider2->rect.y);
+
+  return (
+      collider1->rect.x < collider2->rect.x + collider2->rect.w &&
+      collider1->rect.x + collider1->rect.w > collider2->rect.x &&
+      collider1->rect.y < collider2->rect.y + collider2->rect.h &&
+      collider1->rect.y + collider1->rect.h > collider2->rect.y
+  );
 }
 
 

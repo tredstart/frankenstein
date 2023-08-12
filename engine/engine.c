@@ -50,7 +50,7 @@ void engine__add_component(engine_s *self, void *component,
 }
 
 // todo remove this later
-sprite_component_t *create_empty_rectangle(int entity_id) {
+sprite_component_t *create_empty_rectangle(entity_t entity_id) {
   position_component_t pos = {.x = 10, .y = 10};
   size_component_t size = {.width = 100, .height = 100};
   sprite_component_t *component = components__new_sprite(pos, size, entity_id, NULL);
