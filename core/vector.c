@@ -65,7 +65,7 @@ void vector__drop(vector *self) {
     self->count = 0;
     self->first = NULL;
     self->last = NULL;
-    delete(self);
+    free(self);
   }
 }
 
@@ -81,9 +81,9 @@ void drop_all(vector *self) {
 void item__drop(item *self) {
   if (self) {
     if (self->value) {
-      delete(self->value);
+      free(self->value);
     }
-    delete(self);
+    free(self);
   }
 }
 

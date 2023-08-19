@@ -8,6 +8,4 @@
 #include <stdlib.h>
 void throw_error(const char *msg);
 
-void delete(void *object);
-
 #endif // FRANKENSTEIN_UTILS_H

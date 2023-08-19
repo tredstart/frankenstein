@@ -69,14 +69,33 @@ engine_s *engine__new() {
   return engine;
 }
 
+void hash_map__drop(hash_map *self) {
+  if (self){
+    for (int i = 0; i < DEFAULT_BUFFER; ++i) {
+      if (self->map[i].value){
+        entity_t *e = self->map[i].value;
+        for (int j = 0; j < COMPONENTS_COUNT; ++j) {
+          item *tmp = e->components[j]->first;
+          while (tmp) {
+            item *next = tmp->next;
+            free(tmp);
+            tmp = next;
+          }
+          free(e->components[j]);
+        }
+        free(e);
+      }
+    }
+    free(self);
+  }
+
+}
+
 void engine__drop(engine_s *self) {
   for (int i = 0; i < COMPONENTS_COUNT; ++i)
     vector__drop(self->components[i]);
-  // todo: address memory leak
-//  for (int i = 0; i < self->entities->count; ++i)
-//    delete(self->entities->map[i].value);
   hash_map__drop(self->entities);
-  delete(self);
+  free(self);
 }
 
 void engine__add_component(engine_s *self, void *component,

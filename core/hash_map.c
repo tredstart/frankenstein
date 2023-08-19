@@ -25,6 +25,3 @@ void *hash_map__get(hash_map *self, uint64_t key) {
   return self->map[hash(key)].value;
 }
 
-void hash_map__drop(hash_map *self) {
-  delete(self);
-}
