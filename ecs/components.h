@@ -84,5 +84,11 @@ physics_body_component_t *components__new_physics_body(
     uint64_t entity_id
 );
 
+transform_component_t *components__new_transform_component(
+    position_component_t position,
+    velocity_component_t velocity,
+    uint64_t entity_id
+);
+
 
 #endif // !COMPONENTS_H

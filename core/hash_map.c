@@ -5,11 +5,7 @@
 #include "hash_map.h"
 
 short hash(uint64_t id) {
-  // This function ensures that hashCodes that differ only by
-  // constant multiples at each bit position have a bounded
-  // number of collisions (approximately 8 at default load factor).
-  id ^= (id >> 20) ^ (id >> 12);
-  return (short)((id ^ (id >> 7) ^ (id >> 4)) % DEFAULT_BUFFER);
+  return (short) (id % DEFAULT_BUFFER);
 }
 
 hash_map *hash_map__new() {

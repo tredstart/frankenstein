@@ -33,15 +33,23 @@ engine_s *engine__new() {
   physics_body_component_t *cc1 = components__new_physics_body(&rect1, false, 1);
   physics_body_component_t *cc2 = components__new_physics_body(&rect2, false, 2);
 
+  velocity_component_t velocity1 = {.x = 10, .y = 0};
+  velocity_component_t velocity2 = {.x = 10, .y = 0};
+  transform_component_t *tc1 = components__new_transform_component(c1->position, velocity1, e1->id);
+  transform_component_t *tc2 = components__new_transform_component(c2->position, velocity2, e2->id);
   e1->components[SPRITE] = vector__new(c1);
   e1->components[PHYSICS_BODY] = vector__new(cc1);
+  e1->components[PHYSICS_BODY] = vector__new(tc1);
   e2->components[SPRITE] = vector__new(c2);
   e2->components[PHYSICS_BODY] = vector__new(cc2);
+  e2->components[TRANSFORM] = vector__new(tc2);
 
   engine__add_component(engine, c1, SPRITE);
   engine__add_component(engine, c2, SPRITE);
   engine__add_component(engine, cc1, PHYSICS_BODY);
   engine__add_component(engine, cc2, PHYSICS_BODY);
+  engine__add_component(engine, tc1, TRANSFORM);
+  engine__add_component(engine, tc2, TRANSFORM);
 
   SDL_Init(SDL_INIT_EVERYTHING);
   SDL_CreateWindowAndRenderer(WIDTH, HEIGHT, SDL_WINDOW_SHOWN, &engine->screen,
