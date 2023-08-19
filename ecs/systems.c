@@ -35,8 +35,6 @@ void physics_system(void *context, float dt) {
       physics_body_component_t *collider1 = vector__get(components, i);
       physics_body_component_t *collider2 = vector__get(components, j);
       if (collides(&collider1->collider, &collider2->collider)) {
-        // Find entity, get transform. Apply changes to its position and velocity.
-        printf("collision found\n");
         entity_t *entity = hash_map__get(engine->entities, collider1->entity_id);
         transform_component_t *transform = entity->components[TRANSFORM]->first->value;
 
@@ -44,9 +42,7 @@ void physics_system(void *context, float dt) {
 
         apply_transform(&transform->position, velocity, dt);
 
-        // todo: consider making it a rectangle with position
-        collider1->collider.rect.x -= transform->velocity.x * dt;
-        collider1->collider.rect.y -= transform->velocity.y * dt;
+        apply_transform(&collider1->collider.rect.position, velocity, dt);
 
         vector *sprites = entity->components[SPRITE];
         for (int k = 0; k < sprites->count; ++k) {
@@ -71,8 +67,7 @@ void movement_system(void *context, float dt) {
       apply_transform(&sprite->position, transform->velocity, dt);
     }
     apply_transform(&transform->position, transform->velocity, dt);
-    physics_body->collider.rect.x += transform->velocity.x * dt;
-    physics_body->collider.rect.y += transform->velocity.y * dt;
+    apply_transform(&physics_body->collider.rect.position, transform->velocity, dt);
   }
 }
 
@@ -85,10 +80,10 @@ bool collides(collider_component_t *collider1,
               collider_component_t *collider2) {
 
   return (
-      collider1->rect.x < collider2->rect.x + collider2->rect.w &&
-      collider1->rect.x + collider1->rect.w > collider2->rect.x &&
-      collider1->rect.y < collider2->rect.y + collider2->rect.h &&
-      collider1->rect.y + collider1->rect.h > collider2->rect.y
+      collider1->rect.position.x < collider2->rect.position.x + collider2->rect.size.width &&
+      collider1->rect.position.x + collider1->rect.size.width > collider2->rect.position.x &&
+      collider1->rect.position.y < collider2->rect.position.y + collider2->rect.size.height &&
+      collider1->rect.position.y + collider1->rect.size.height > collider2->rect.position.y
   );
 }
 

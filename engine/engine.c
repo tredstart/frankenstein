@@ -9,7 +9,6 @@ engine_s *engine__new() {
   engine_s *engine = calloc(1, sizeof(*engine));
 
   if (!engine)
-    // todo: make proper logs with stderr
     throw_error("Error! Cannot create engine;");
 
   engine->screen = NULL;

@@ -5,6 +5,6 @@
 #include "utils.h"
 
 void throw_error(const char *msg) {
-  printf("%s\n", msg);
-  exit(1);
+  fprintf(stderr, "%s\n", msg);
+  exit(EXIT_FAILURE);
 }

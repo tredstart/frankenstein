@@ -13,7 +13,8 @@ sprite_component_t *components__new_sprite(
   sprite->position = position;
   sprite->size = size;
   sprite->entity_id = entity_id;
-  // todo: no texture no candy
+  if (!sprite->texture)
+    throw_error("Error! No texture!");
   sprite->texture = texture;
   return sprite;
 }
@@ -31,7 +32,7 @@ physics_body_component_t *components__new_physics_body(
   if (physics_body->is_circular)
     physics_body->collider.circle = *(circle_t *) shape;
   else
-    physics_body->collider.rect = *(SDL_Rect *) shape;
+    physics_body->collider.rect = *(rect_t *) shape;
   physics_body->entity_id = entity_id;
   return physics_body;
 }

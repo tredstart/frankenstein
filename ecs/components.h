@@ -21,16 +21,18 @@ typedef struct velocity_component_t {
   int y;
 } velocity_component_t;
 
+typedef struct rect_t {
+  position_component_t position;
+  size_component_t size;
+} rect_t;
+
 typedef struct circle_t {
   position_component_t position;
   float radius;
 } circle_t;
 
-/* [WIP] */
-/* if there is need to render out the collider, SDL_rect is easy to pass */
-/* it is topic to consider */
 typedef struct collider_component_t {
-  SDL_Rect rect;
+  rect_t rect;
   circle_t circle;
 } collider_component_t;
 

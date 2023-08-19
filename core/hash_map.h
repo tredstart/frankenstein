@@ -16,8 +16,6 @@ typedef struct node {
 
 typedef struct hash_map{
   node map[DEFAULT_BUFFER];
-  // todo: this count for now doesn't change anything
-  ushort count;
 } hash_map;
 
 hash_map *hash_map__new();
