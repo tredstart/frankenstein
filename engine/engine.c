@@ -17,29 +17,40 @@ engine_s *engine__new() {
   // [WIP] create test data
   entity_t *e1 = calloc(1, sizeof(*e1));
   entity_t *e2 = calloc(1, sizeof(*e2));
-  e1->id = 1;
-  e2->id = 2;
+  e1->id = 0;
+  e2->id = 1;
 
   engine->entities = hash_map__new();
-  hash_map__insert(engine->entities, e1->id, e1->components);
-  hash_map__insert(engine->entities, e2->id, e2->components);
+  hash_map__insert(engine->entities, e1->id, e1);
+  hash_map__insert(engine->entities, e2->id, e2);
 
-  sprite_component_t *c1 = create_empty_rectangle(e1->id);
-  sprite_component_t *c2 = create_empty_rectangle(e2->id);
-  c2->position.x += 10;
+  position_component_t p1 = {
+      .x = 500,
+      .y = 100,
+  };
+  size_component_t s1 = {100, 100};
+
+  position_component_t p2 = {
+      .x = 500,
+      .y = 500,
+  };
+  size_component_t s2 = {100, 100};
+
+  sprite_component_t *c1 = components__new_sprite(p1, s1, e1->id, NULL);
+  sprite_component_t *c2 = components__new_sprite(p2, s2, e2->id, NULL);
 
   SDL_Rect rect1 = {.x = c1->position.x, .y = c1->position.y, .w = c1->size.width, .h = c1->size.height };
   SDL_Rect rect2 = {.x = c2->position.x, .y = c2->position.y, .w = c2->size.width, .h = c2->size.height };
-  physics_body_component_t *cc1 = components__new_physics_body(&rect1, false, 1);
-  physics_body_component_t *cc2 = components__new_physics_body(&rect2, false, 2);
+  physics_body_component_t *cc1 = components__new_physics_body(&rect1, false, e1->id);
+  physics_body_component_t *cc2 = components__new_physics_body(&rect2, false, e2->id );
 
-  velocity_component_t velocity1 = {.x = 10, .y = 0};
-  velocity_component_t velocity2 = {.x = 10, .y = 0};
+  velocity_component_t velocity1 = {.x = 0, .y = 10};
+  velocity_component_t velocity2 = {.x = 0, .y = 0};
   transform_component_t *tc1 = components__new_transform_component(c1->position, velocity1, e1->id);
   transform_component_t *tc2 = components__new_transform_component(c2->position, velocity2, e2->id);
   e1->components[SPRITE] = vector__new(c1);
   e1->components[PHYSICS_BODY] = vector__new(cc1);
-  e1->components[PHYSICS_BODY] = vector__new(tc1);
+  e1->components[TRANSFORM] = vector__new(tc1);
   e2->components[SPRITE] = vector__new(c2);
   e2->components[PHYSICS_BODY] = vector__new(cc2);
   e2->components[TRANSFORM] = vector__new(tc2);
@@ -61,6 +72,7 @@ engine_s *engine__new() {
 void engine__drop(engine_s *self) {
   for (int i = 0; i < COMPONENTS_COUNT; ++i)
     vector__drop(self->components[i]);
+  // todo: address memory leak
 //  for (int i = 0; i < self->entities->count; ++i)
 //    delete(self->entities->map[i].value);
   hash_map__drop(self->entities);
@@ -73,12 +85,4 @@ void engine__add_component(engine_s *self, void *component,
     vector__add(self->components[index], component);
   else
     self->components[index] = vector__new(component);
-}
-
-// todo remove this later
-sprite_component_t *create_empty_rectangle(uint64_t entity_id) {
-  position_component_t pos = {.x = 10, .y = 10};
-  size_component_t size = {.width = 100, .height = 100};
-  sprite_component_t *component = components__new_sprite(pos, size, entity_id, NULL);
-  return component;
 }

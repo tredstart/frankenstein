@@ -26,6 +26,4 @@ void engine__add_component(engine_s *self, void *component, components_e index);
 
 void engine__drop(engine_s *engine);
 
-sprite_component_t *create_empty_rectangle(uint64_t entity_id);
-
 #endif // FRANKENSTEIN_ENGINE_H

@@ -14,6 +14,7 @@ void systems__update(void *engine, float dt);
 
 void render_system(void *context, float dt);
 void physics_system(void *context, float dt);
+void movement_system(void *context, float dt);
 
 bool collides(collider_component_t *collider1,
               collider_component_t *collider2);

@@ -63,7 +63,6 @@ typedef struct transform_component_t {
 /* End of standalone components */
 
 typedef enum {
-  SIZE = 0,
   TRANSFORM,
   SPRITE,
   PHYSICS_BODY,
