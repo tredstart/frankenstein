@@ -19,7 +19,7 @@ typedef struct hash_map{
   ushort count;
 } hash_map;
 
-hash_map *hash_map__new(uint64_t key, void *value);
+hash_map *hash_map__new();
 void hash_map__insert(hash_map *self, uint64_t key, void *value);
 void *hash_map__get(hash_map *self, uint64_t key);
 void hash_map__drop(hash_map *self);
