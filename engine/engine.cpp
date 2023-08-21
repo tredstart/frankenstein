@@ -32,14 +32,8 @@ Engine::Engine() {
   auto c1 = new SpriteComponent(p1, s1, e1->id, nullptr);
   auto c2 = new SpriteComponent(p2, s2, e2->id, nullptr);
 
-  SDL_Rect rect1 = {.x = c1->position.x,
-                    .y = c1->position.y,
-                    .w = c1->size.width,
-                    .h = c1->size.height};
-  SDL_Rect rect2 = {.x = c2->position.x,
-                    .y = c2->position.y,
-                    .w = c2->size.width,
-                    .h = c2->size.height};
+  rect_t rect1 = {.position = c1->position, .size = c1->size};
+  rect_t rect2 = {.position = c2->position, .size = c2->size};
   auto cc1 = new PhysicsBodyComponent(&rect1, false, e1->id);
   auto cc2 = new PhysicsBodyComponent(&rect2, false, e2->id);
 
