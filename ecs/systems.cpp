@@ -11,11 +11,11 @@ void (*SYSTEMS[SYSTEMS_COUNT])(void *engine, float dt) = {
 void apply_transform(position_component_t *position, velocity_component_t velocity, float dt);
 
 void render_system(void *context, float dt) {
-  auto engine = static_cast<engine_s *>(context);
-  vector *components = engine->components[SPRITE];
+  auto engine = static_cast<Engine *>(context);
+  std::vector<void*> components = engine->components[SPRITE];
   SDL_Renderer *renderer = engine->renderer;
-  for (int i = 0; i < components->count; ++i) {
-    auto sprite = static_cast<sprite_component_t *>(vectorGet(components, i));
+  for (int i = 0; i < components.size(); ++i) {
+    auto sprite = static_cast<sprite_component_t *>(components[i]);
     SDL_Rect rect;
     SDL_SetRenderDrawColor(renderer, 0, 255 * i, 255, 255);
     rect.h = sprite->size.height;
@@ -28,15 +28,15 @@ void render_system(void *context, float dt) {
 
 /* [WIP] */
 void physics_system(void *context, float dt) {
-  auto engine = static_cast<engine_s *>(context);
-  vector *components = engine->components[PHYSICS_BODY];
-  for (int i = 0; i < components->count - 1; ++i) {
-    for (int j = 1; j < components->count; ++j) {
-      auto collider1 = static_cast<physics_body_component_t *>(vectorGet(components, i));
-      auto collider2 = static_cast<physics_body_component_t *>(vectorGet(components, j));
+  auto engine = static_cast<Engine *>(context);
+  std::vector<void*>components = engine->components[PHYSICS_BODY];
+  for (int i = 0; i < components.size() - 1; ++i) {
+    for (int j = 1; j < components.size(); ++j) {
+      auto collider1 = static_cast<physics_body_component_t *>(components[i]);
+      auto collider2 = static_cast<physics_body_component_t *>(components[j]);
       if (collides(&collider1->collider, &collider2->collider)) {
-        auto entity = static_cast<entity_t *>(hashMapGet(engine->entities, collider1->entity_id));
-        auto transform = static_cast<transform_component_t *>(entity->components[TRANSFORM]->first->value);
+        entity_t *entity = engine->entities.at(collider1->entity_id);
+        auto transform = static_cast<transform_component_t *>(entity->components[TRANSFORM][0]);
 
         velocity_component_t velocity = {.x = -transform->velocity.x, .y = -transform->velocity.y};
 
@@ -44,9 +44,9 @@ void physics_system(void *context, float dt) {
 
         apply_transform(&collider1->collider.rect.position, velocity, dt);
 
-        vector *sprites = entity->components[SPRITE];
-        for (int k = 0; k < sprites->count; ++k) {
-          auto sprite = static_cast<sprite_component_t *>(vectorGet(sprites, k));
+        std::vector<void*> sprites = entity->components[SPRITE];
+        for (auto & k : sprites) {
+          auto sprite = static_cast<sprite_component_t *>(k);
           apply_transform(&sprite->position, velocity, dt);
         }
       }
@@ -55,15 +55,15 @@ void physics_system(void *context, float dt) {
 }
 
 void movement_system(void *context, float dt) {
-  auto engine = static_cast<engine_s *>(context);
-  vector *components = engine->components[TRANSFORM];
-  for (int i = 0; i < components->count; ++i) {
-    auto transform = static_cast<transform_component_t *>(vectorGet(components, i));
-    auto entity = static_cast<entity_t *>(hashMapGet(engine->entities, transform->entity_id));
-    vector *sprites = entity->components[SPRITE];
-    auto physics_body = static_cast<physics_body_component_t *>(entity->components[PHYSICS_BODY]->first->value);
-    for (int j = 0; j < sprites->count; ++j) {
-      auto sprite = static_cast<sprite_component_t *>(vectorGet(sprites, j));
+  auto engine = static_cast<Engine *>(context);
+  std::vector<void*> components = engine->components[TRANSFORM];
+  for (auto & component : components) {
+    auto transform = static_cast<transform_component_t *>(component);
+    entity_t *entity = engine->entities.at(transform->entity_id);
+    std::vector<void*> sprites = entity->components[SPRITE];
+    auto physics_body = static_cast<physics_body_component_t*>(entity->components[PHYSICS_BODY][0]);
+    for (auto & j : sprites) {
+      auto sprite = static_cast<sprite_component_t *>(j);
       apply_transform(&sprite->position, transform->velocity, dt);
     }
     apply_transform(&transform->position, transform->velocity, dt);

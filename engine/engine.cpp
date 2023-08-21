@@ -5,13 +5,8 @@
 #include "engine.h"
 
 
-engine_s *engineNew() {
-  engine_s *engine = static_cast<engine_s *>(calloc(1, sizeof(*engine)));
-
-  if (!engine)
-    throw_error("Error! Cannot create engine;");
-
-  engine->screen = nullptr;
+Engine::Engine() {
+  this->screen = nullptr;
 
   // [WIP] create test data
   entity_t *e1 = static_cast<entity_t *>(calloc(1, sizeof(*e1)));
@@ -19,9 +14,8 @@ engine_s *engineNew() {
   e1->id = 0;
   e2->id = 1;
 
-  engine->entities = hashMapNew();
-  hashMapInsert(engine->entities, e1->id, e1);
-  hashMapInsert(engine->entities, e2->id, e2);
+  entities.insert_or_assign(e1->id, e1);
+  entities.insert_or_assign(e2->id, e2);
 
   position_component_t p1 = {
       .x = 500,
@@ -47,60 +41,25 @@ engine_s *engineNew() {
   velocity_component_t velocity2 = {.x = 0, .y = 0};
   transform_component_t *tc1 = componentsNewTransformComponent(c1->position, velocity1, e1->id);
   transform_component_t *tc2 = componentsNewTransformComponent(c2->position, velocity2, e2->id);
-  e1->components[SPRITE] = vectorNew(c1);
-  e1->components[PHYSICS_BODY] = vectorNew(cc1);
-  e1->components[TRANSFORM] = vectorNew(tc1);
-  e2->components[SPRITE] = vectorNew(c2);
-  e2->components[PHYSICS_BODY] = vectorNew(cc2);
-  e2->components[TRANSFORM] = vectorNew(tc2);
+  e1->components[SPRITE].push_back(c1);
+  e1->components[PHYSICS_BODY].push_back(cc1);
+  e1->components[TRANSFORM].push_back(tc1);
+  e2->components[SPRITE].push_back(c2);
+  e2->components[PHYSICS_BODY].push_back(cc2);
+  e2->components[TRANSFORM].push_back(tc2);
 
-  engineAddComponent(engine, c1, SPRITE);
-  engineAddComponent(engine, c2, SPRITE);
-  engineAddComponent(engine, cc1, PHYSICS_BODY);
-  engineAddComponent(engine, cc2, PHYSICS_BODY);
-  engineAddComponent(engine, tc1, TRANSFORM);
-  engineAddComponent(engine, tc2, TRANSFORM);
+  addComponent(c1, SPRITE);
+  addComponent(c2, SPRITE);
+  addComponent(cc1, PHYSICS_BODY);
+  addComponent(cc2, PHYSICS_BODY);
+  addComponent(tc1, TRANSFORM);
+  addComponent(tc2, TRANSFORM);
 
   SDL_Init(SDL_INIT_EVERYTHING);
-  SDL_CreateWindowAndRenderer(WIDTH, HEIGHT, SDL_WINDOW_SHOWN, &engine->screen,
-                              &engine->renderer);
-
-  return engine;
+  SDL_CreateWindowAndRenderer(WIDTH, HEIGHT, SDL_WINDOW_SHOWN, &screen,
+                              &renderer);
 }
 
-void hashMapDrop(hash_map *self) {
-  if (self){
-    for (int i = 0; i < DEFAULT_BUFFER; ++i) {
-      if (self->map[i].value){
-        auto e = static_cast<entity_t *>(self->map[i].value);
-        for (int j = 0; j < COMPONENTS_COUNT; ++j) {
-          item *tmp = e->components[j]->first;
-          while (tmp) {
-            item *next = tmp->next;
-            free(tmp);
-            tmp = next;
-          }
-          free(e->components[j]);
-        }
-        free(e);
-      }
-    }
-    free(self);
-  }
-
-}
-
-void engineDrop(engine_s *engine) {
-  for (int i = 0; i < COMPONENTS_COUNT; ++i)
-    vectorDrop(engine->components[i]);
-  hashMapDrop(engine->entities);
-  free(engine);
-}
-
-void engineAddComponent(engine_s *self, void *component,
-                        components_e index) {
-  if (self->components[index])
-    vectorAdd(self->components[index], component);
-  else
-    self->components[index] = vectorNew(component);
+void Engine::addComponent(void *component, components_e index) {
+  this->components[index].push_back(component);
 }

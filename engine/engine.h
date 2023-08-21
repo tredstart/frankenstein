@@ -8,22 +8,20 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
-#include "../core/vector.h"
+#include <vector>
+#include <unordered_map>
 #include "consts.h"
-#include "../core/hash_map.h"
 #include "../ecs/entity.h"
 
-typedef struct engine_s {
+class Engine{
+public:
+  Engine();
+  void addComponent(void *component, components_e index);
+  ~Engine() = default;
+
+  SDL_Renderer *renderer{};
   SDL_Window *screen;
-  SDL_Renderer *renderer;
-  vector *components[COMPONENTS_COUNT];
-  hash_map *entities;
-} engine_s;
-
-engine_s *engineNew();
-
-void engineAddComponent(engine_s *self, void *component, components_e index);
-
-void engineDrop(engine_s *engine);
-
+  std::vector<void*> components[COMPONENTS_COUNT];
+  std::unordered_map<uint64_t, entity_t*> entities;
+};
 #endif // FRANKENSTEIN_ENGINE_H
