@@ -2,6 +2,9 @@
 #define COMPONENTS_H
 
 #include <cstdint>
+#include <string>
+#include <unordered_map>
+#include <vector>
 class IComponent {
 public:
   virtual ~IComponent() = default;
@@ -11,18 +14,18 @@ public:
 /*  Not standalone components  */
 //
 typedef struct {
-  int width;
-  int height;
+  double width;
+  double height;
 } size_component_t;
 
 typedef struct {
-  int x;
-  int y;
+  double x;
+  double y;
 } position_component_t;
 
 typedef struct {
-  int x;
-  int y;
+  double x;
+  double y;
 } velocity_component_t;
 
 typedef struct {
@@ -32,7 +35,7 @@ typedef struct {
 
 typedef struct {
   position_component_t position;
-  float radius;
+  double radius;
 } circle_t;
 
 typedef struct {
@@ -62,7 +65,7 @@ public:
   collider_component_t collider{};
   bool is_circular;
   uint64_t entity_id;
-  PhysicsBodyComponent(void *shape, bool is_circular, uint64_t entity_id);
+  PhysicsBodyComponent(rect_t shape, bool is_circular, uint64_t entity_id);
   ~PhysicsBodyComponent() override = default;
 };
 
@@ -80,12 +83,13 @@ public:
 /* End of standalone components */
 
 typedef enum {
-  TRANSFORM,
-  SPRITE,
-  PHYSICS_BODY,
+  Transform,
+  Sprite,
+  PhysicsBody,
 
   COMPONENTS_COUNT
 } components_e;
+
 
 
 #endif// !COMPONENTS_H

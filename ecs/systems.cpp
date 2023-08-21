@@ -7,7 +7,7 @@ void apply_transform(position_component_t *position,
                      velocity_component_t velocity, float dt);
 
 void render_system(Engine *engine, float dt) {
-  std::vector<IComponent *> components = engine->components[SPRITE];
+  std::vector<IComponent *> components = engine->components[Sprite];
   SDL_Renderer *renderer = engine->renderer;
   for (int i = 0; i < components.size(); ++i) {
     auto sprite = dynamic_cast<SpriteComponent *>(components[i]);
@@ -23,7 +23,7 @@ void render_system(Engine *engine, float dt) {
 
 /* [WIP] */
 void physics_system(Engine *engine, float dt) {
-  std::vector<IComponent *> components = engine->components[PHYSICS_BODY];
+  std::vector<IComponent *> components = engine->components[PhysicsBody];
   for (int i = 0; i < components.size() - 1; ++i) {
     for (int j = 1; j < components.size(); ++j) {
       auto collider1 = dynamic_cast<PhysicsBodyComponent *>(components[i]);
@@ -31,7 +31,7 @@ void physics_system(Engine *engine, float dt) {
       if (collides(&collider1->collider, &collider2->collider)) {
         Entity *entity = engine->entities.at(collider1->entity_id);
         auto transform = dynamic_cast<TransformComponent *>(
-            entity->components[TRANSFORM][0]);
+            entity->components[Transform][0]);
 
         velocity_component_t velocity = {.x = -transform->velocity.x,
                                          .y = -transform->velocity.y};
@@ -40,7 +40,7 @@ void physics_system(Engine *engine, float dt) {
 
         apply_transform(&collider1->collider.rect.position, velocity, dt);
 
-        std::vector<IComponent *> sprites = entity->components[SPRITE];
+        std::vector<IComponent *> sprites = entity->components[Sprite];
         for (auto &k: sprites) {
           auto sprite = dynamic_cast<SpriteComponent *>(k);
           apply_transform(&sprite->position, velocity, dt);
@@ -51,13 +51,13 @@ void physics_system(Engine *engine, float dt) {
 }
 
 void movement_system(Engine *engine, float dt) {
-  std::vector<IComponent *> components = engine->components[TRANSFORM];
+  std::vector<IComponent *> components = engine->components[Transform];
   for (auto &component: components) {
     auto transform = dynamic_cast<TransformComponent *>(component);
     Entity *entity = engine->entities.at(transform->entity_id);
-    std::vector<IComponent *> sprites = entity->components[SPRITE];
+    std::vector<IComponent *> sprites = entity->components[Sprite];
     auto physics_body = dynamic_cast<PhysicsBodyComponent *>(
-        entity->components[PHYSICS_BODY][0]);
+        entity->components[PhysicsBody][0]);
     for (auto &j: sprites) {
       auto sprite = dynamic_cast<SpriteComponent *>(j);
       apply_transform(&sprite->position, transform->velocity, dt);

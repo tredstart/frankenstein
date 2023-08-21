@@ -5,55 +5,29 @@
 #include "engine.h"
 #include "consts.h"
 #include <SDL2/SDL.h>
+#include <toml.hpp>
 
+// Macro for creating components
+#define CREATE_COMPONENT(ComponentType, ...)                                   \
+  case ComponentType: {                                                        \
+    ComponentType##Component *component =                                      \
+        new ComponentType##Component(__VA_ARGS__);                             \
+    components[ComponentType].push_back(component);                            \
+    break;                                                                     \
+  }
+
+
+const std::unordered_map<std::string, components_e> componentTypes{
+    {"Transform", Transform},
+    {"Sprite", Sprite},
+    {"PhysicsBody", PhysicsBody}};
 
 Engine::Engine() {
   this->screen = nullptr;
 
-  // [WIP] create test data
-  auto e1 = new Entity(0);
-  auto e2 = new Entity(1);
+  loadScenes();
+  readScene();
 
-  entities.insert_or_assign(e1->id, e1);
-  entities.insert_or_assign(e2->id, e2);
-
-  position_component_t p1 = {
-      .x = 500,
-      .y = 100,
-  };
-  size_component_t s1 = {100, 100};
-
-  position_component_t p2 = {
-      .x = 500,
-      .y = 500,
-  };
-  size_component_t s2 = {100, 100};
-
-  auto c1 = new SpriteComponent(p1, s1, e1->id, nullptr);
-  auto c2 = new SpriteComponent(p2, s2, e2->id, nullptr);
-
-  rect_t rect1 = {.position = c1->position, .size = c1->size};
-  rect_t rect2 = {.position = c2->position, .size = c2->size};
-  auto cc1 = new PhysicsBodyComponent(&rect1, false, e1->id);
-  auto cc2 = new PhysicsBodyComponent(&rect2, false, e2->id);
-
-  velocity_component_t velocity1 = {.x = 0, .y = 10};
-  velocity_component_t velocity2 = {.x = 0, .y = 0};
-  auto tc1 = new TransformComponent(c1->position, velocity1, e1->id);
-  auto tc2 = new TransformComponent(c2->position, velocity2, e2->id);
-  e1->components[SPRITE].push_back(c1);
-  e1->components[PHYSICS_BODY].push_back(cc1);
-  e1->components[TRANSFORM].push_back(tc1);
-  e2->components[SPRITE].push_back(c2);
-  e2->components[PHYSICS_BODY].push_back(cc2);
-  e2->components[TRANSFORM].push_back(tc2);
-
-  addComponent(c1, SPRITE);
-  addComponent(c2, SPRITE);
-  addComponent(cc1, PHYSICS_BODY);
-  addComponent(cc2, PHYSICS_BODY);
-  addComponent(tc1, TRANSFORM);
-  addComponent(tc2, TRANSFORM);
 
   SDL_Init(SDL_INIT_EVERYTHING);
   SDL_CreateWindowAndRenderer(WIDTH, HEIGHT, SDL_WINDOW_SHOWN, &screen,
@@ -63,8 +37,67 @@ Engine::Engine() {
 void Engine::addComponent(IComponent *component, components_e index) {
   this->components[index].push_back(component);
 }
+
 Engine::~Engine() {
   for (auto &entity: entities) { delete entity.second; }
   for (auto &i: components)
     for (auto &component: i) delete component;
+}
+
+// todo: error handling
+void Engine::loadScenes() {
+  auto data = toml::parse(resources + "main.toml");
+  const auto &scenesArray = data["scenes"].as_array();
+  for (const auto &scene: scenesArray) { scenes.push_back(scene.as_string()); }
+}
+
+void Engine::readScene(int index) {
+  std::string path = resources + scenes[index];
+  auto data = toml::parse(path + "/" + "scene.toml");
+  const auto &entitiesArray = data["entities"].as_array();
+  for (const auto &entity: entitiesArray) {
+    std::string entity_name = entity.as_string();
+    std::string entity_path = path;
+    entity_path.append("/").append(entity_name);
+    parseEntity(entity_path);
+  }
+}
+
+void Engine::parseEntity(const std::string &name) {
+  toml::table data = toml::parse(name).as_table();
+  auto entity = new Entity(entities.size());
+  entities.insert_or_assign(entity->id, entity);
+  for (const auto &[componentTypeStr, componentData]: data) {
+    auto it = componentTypes.find(componentTypeStr);
+    components_e componentType = it->second;
+    switch (componentType) {
+      CREATE_COMPONENT(
+          Transform,
+          position_component_t{toml::find(toml::find(componentData, "position"), "x").as_floating(),
+                               toml::find(toml::find(componentData, "position"), "y").as_floating()},
+          velocity_component_t{toml::find(toml::find(componentData, "velocity"), "x").as_floating(),
+                               toml::find(toml::find(componentData, "velocity"), "y").as_floating()},
+          entity->id)
+      CREATE_COMPONENT(Sprite,
+                       position_component_t{toml::find(toml::find(componentData, "position"), "x").as_floating(),
+                                            toml::find(toml::find(componentData, "position"), "y").as_floating()},
+                       size_component_t{toml::find(toml::find(componentData, "size"), "width").as_floating(),
+                                        toml::find(toml::find(componentData, "size"), "height").as_floating()},
+                       entity->id,
+                       nullptr// Texture, replace with actual value
+      )
+      CREATE_COMPONENT(PhysicsBody,
+                       rect_t{
+                           .position = position_component_t{toml::find(toml::find(componentData, "position"), "x").as_floating(),
+                                                toml::find(toml::find(componentData, "position"), "y").as_floating()},
+                           .size = size_component_t{toml::find(toml::find(componentData, "size"), "width").as_floating(),
+                                            toml::find(toml::find(componentData, "size"), "height").as_floating()}
+                       },// Shape, replace with actual value
+                       false,  // is_circular, replace with actual value
+                       entity->id)
+      case COMPONENTS_COUNT: break;
+    }
+    if (componentType <= COMPONENTS_COUNT)
+      entity->components[componentType].push_back(components[componentType].back());
+  }
 }
