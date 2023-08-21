@@ -1,8 +1,7 @@
 #ifndef COMPONENTS_H
+#define COMPONENTS_H
 
-#include "../core/utils.h"
-#include <SDL2/SDL_rect.h>
-
+#include <cstdint>
 class IComponent {
 public:
   virtual ~IComponent() = default;

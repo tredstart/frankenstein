@@ -5,11 +5,8 @@
 #ifndef FRANKENSTEIN_SYSTEMS_H
 #define FRANKENSTEIN_SYSTEMS_H
 
+
 #include "../engine/engine.h"
-#include <SDL2/SDL.h>
-#include <cstddef>
-
-
 void render_system(Engine *context, float dt);
 void physics_system(Engine *context, float dt);
 void movement_system(Engine *context, float dt);

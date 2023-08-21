@@ -3,8 +3,9 @@
 //
 
 #include "utils.h"
+#include <iostream>
 
 void throw_error(const char *msg) {
-  fprintf(stderr, "%s\n", msg);
+  std::cerr << msg << std::endl;
   exit(EXIT_FAILURE);
 }

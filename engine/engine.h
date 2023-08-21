@@ -6,13 +6,9 @@
 #define FRANKENSTEIN_ENGINE_H
 
 #include "../ecs/entity.h"
-#include "consts.h"
-#include <SDL2/SDL.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
 #include <unordered_map>
-#include <vector>
-
 class Engine {
 public:
   Engine();

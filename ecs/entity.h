@@ -8,7 +8,6 @@
 #include "components.h"
 #include <cstdint>
 #include <vector>
-
 typedef uint64_t entity_id_t;
 
 class Entity {

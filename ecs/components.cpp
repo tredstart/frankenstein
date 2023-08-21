@@ -1,6 +1,5 @@
 #include "components.h"
 
-
 SpriteComponent::SpriteComponent(position_component_t position,
                                  size_component_t size, uint64_t entity_id,
                                  char *texture) {

@@ -1,9 +1,9 @@
-#include "ecs/systems.h"
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_render.h>
-#include <SDL2/SDL_video.h>
-#include <unistd.h>
 
+
+#include "ecs/systems.h"
+#include "engine/engine.h"
+#include <SDL2/SDL.h>
+#include <csignal>
 int main() {
 
   auto *engine = new Engine;

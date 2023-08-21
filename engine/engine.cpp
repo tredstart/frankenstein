@@ -3,6 +3,8 @@
 //
 
 #include "engine.h"
+#include "consts.h"
+#include <SDL2/SDL.h>
 
 
 Engine::Engine() {
