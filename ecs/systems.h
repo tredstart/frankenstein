@@ -6,15 +6,26 @@
 #define FRANKENSTEIN_SYSTEMS_H
 
 #include "../engine/engine.h"
-#include "consts.h"
 #include <SDL2/SDL.h>
-#include <stddef.h>
+#include <cstddef>
 
-void systems__update(void *engine, float dt);
 
-void render_system(void *context, float dt);
-void physics_system(void *context, float dt);
-void movement_system(void *context, float dt);
+void render_system(Engine *context, float dt);
+void physics_system(Engine *context, float dt);
+void movement_system(Engine *context, float dt);
+
+typedef void(UPDATE_METHOD)(Engine *engine, float dt);
+
+class Systems {
+private:
+  std::vector<UPDATE_METHOD *> systems{&render_system, &physics_system,
+                                       &movement_system};
+
+public:
+  Systems() = default;
+  ~Systems() = default;
+  void update(Engine *engine, float dt);
+};
 
 bool collides(collider_component_t *collider1, collider_component_t *collider2);
 

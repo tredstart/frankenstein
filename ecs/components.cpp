@@ -7,6 +7,7 @@ SpriteComponent::SpriteComponent(position_component_t position,
   this->position = position;
   this->size = size;
   this->entity_id = entity_id;
+  // [WIP] for early testing purposes
   //  if (!sprite->texture)
   //    throw_error("Error! No texture!");
   this->texture = texture;

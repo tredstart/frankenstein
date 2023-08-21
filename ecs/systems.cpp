@@ -2,15 +2,11 @@
 // Created by redstart on 8/3/23.
 //
 #include "systems.h"
-#include "consts.h"
-void (*SYSTEMS[3])(void *engine, float dt) = {&render_system, &physics_system,
-                                              &movement_system};
 
 void apply_transform(position_component_t *position,
                      velocity_component_t velocity, float dt);
 
-void render_system(void *context, float dt) {
-  auto engine = static_cast<Engine *>(context);
+void render_system(Engine *engine, float dt) {
   std::vector<IComponent *> components = engine->components[SPRITE];
   SDL_Renderer *renderer = engine->renderer;
   for (int i = 0; i < components.size(); ++i) {
@@ -26,8 +22,7 @@ void render_system(void *context, float dt) {
 }
 
 /* [WIP] */
-void physics_system(void *context, float dt) {
-  auto engine = static_cast<Engine *>(context);
+void physics_system(Engine *engine, float dt) {
   std::vector<IComponent *> components = engine->components[PHYSICS_BODY];
   for (int i = 0; i < components.size() - 1; ++i) {
     for (int j = 1; j < components.size(); ++j) {
@@ -55,8 +50,7 @@ void physics_system(void *context, float dt) {
   }
 }
 
-void movement_system(void *context, float dt) {
-  auto engine = static_cast<Engine *>(context);
+void movement_system(Engine *engine, float dt) {
   std::vector<IComponent *> components = engine->components[TRANSFORM];
   for (auto &component: components) {
     auto transform = dynamic_cast<TransformComponent *>(component);
@@ -94,6 +88,6 @@ bool collides(collider_component_t *collider1,
 }
 
 
-void systems__update(void *engine, float dt) {
-  for (auto &update: SYSTEMS) (*update)(engine, dt);
+void Systems::update(Engine *engine, float dt) {
+  for (auto &update: systems) (*update)(engine, dt);
 }

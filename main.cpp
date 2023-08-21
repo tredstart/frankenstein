@@ -7,11 +7,12 @@
 int main() {
 
   auto *engine = new Engine;
-
+  Systems systems;
   for (int i = 0; i < 60; i++) {
     SDL_SetRenderDrawColor(engine->renderer, 0xFF, 0xFF, 0xFF, 0xFF);
     SDL_RenderClear(engine->renderer);
-    systems__update(engine, 1);
+    // [WIP] delta time should be passed to update instead of magic number
+    systems.update(engine, 1);
     SDL_RenderPresent(engine->renderer);
     usleep(15000);
   }
