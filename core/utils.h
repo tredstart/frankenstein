@@ -8,4 +8,4 @@
 #include <cstdlib>
 void throw_error(const char *msg);
 
-#endif // FRANKENSTEIN_UTILS_H
+#endif// FRANKENSTEIN_UTILS_H

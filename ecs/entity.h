@@ -5,15 +5,18 @@
 #ifndef FRANKENSTEIN_ENTITY_H
 #define FRANKENSTEIN_ENTITY_H
 
-#include <cstdint>
 #include "components.h"
+#include <cstdint>
+#include <vector>
 
 typedef uint64_t entity_id_t;
 
-typedef struct entity_t {
+class Entity {
 public:
   entity_id_t id;
-  std::vector<void*> components[COMPONENTS_COUNT];
-} entity_t;
+  std::vector<IComponent *> components[COMPONENTS_COUNT];
+  explicit Entity(entity_id_t id) { this->id = id; }
+  ~Entity() = default;
+};
 
-#endif //FRANKENSTEIN_ENTITY_H
+#endif//FRANKENSTEIN_ENTITY_H

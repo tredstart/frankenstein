@@ -8,4 +8,4 @@
 #define WIDTH 1024
 #define HEIGHT 720
 
-#endif //FRANKENSTEIN_CONSTS_H
+#endif//FRANKENSTEIN_CONSTS_H

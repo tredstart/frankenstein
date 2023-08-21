@@ -1,36 +1,42 @@
 #ifndef COMPONENTS_H
 
-#include <SDL2/SDL_rect.h>
 #include "../core/utils.h"
+#include <SDL2/SDL_rect.h>
+
+class IComponent {
+public:
+  virtual ~IComponent() = default;
+};
+
+
 /*  Not standalone components  */
 //
-
-typedef struct size_component_t {
+typedef struct {
   int width;
   int height;
 } size_component_t;
 
-typedef struct position_component_t {
+typedef struct {
   int x;
   int y;
 } position_component_t;
 
-typedef struct velocity_component_t {
+typedef struct {
   int x;
   int y;
 } velocity_component_t;
 
-typedef struct rect_t {
+typedef struct {
   position_component_t position;
   size_component_t size;
 } rect_t;
 
-typedef struct circle_t {
+typedef struct {
   position_component_t position;
   float radius;
 } circle_t;
 
-typedef struct collider_component_t {
+typedef struct {
   rect_t rect;
   circle_t circle;
 } collider_component_t;
@@ -41,24 +47,35 @@ typedef struct collider_component_t {
 /* Standalone components */
 //
 
-typedef struct sprite_component_t {
-  position_component_t position;
-  size_component_t size;
+class SpriteComponent : public IComponent {
+public:
+  position_component_t position{};
+  size_component_t size{};
   uint64_t entity_id;
   char *texture;
-} sprite_component_t;
+  SpriteComponent(position_component_t position, size_component_t size,
+                  uint64_t entity_id, char *texture);
+  ~SpriteComponent() override = default;
+};
 
-typedef struct physics_body_component_t {
-  collider_component_t collider;
+class PhysicsBodyComponent : public IComponent {
+public:
+  collider_component_t collider{};
   bool is_circular;
   uint64_t entity_id;
-} physics_body_component_t;
+  PhysicsBodyComponent(void *shape, bool is_circular, uint64_t entity_id);
+  ~PhysicsBodyComponent() override = default;
+};
 
-typedef struct transform_component_t {
-  position_component_t position;
-  velocity_component_t velocity;
+class TransformComponent : public IComponent {
+public:
+  position_component_t position{};
+  velocity_component_t velocity{};
   uint64_t entity_id;
-} transform_component_t;
+  TransformComponent(position_component_t position,
+                     velocity_component_t velocity, uint64_t entity_id);
+  ~TransformComponent() override = default;
+};
 
 //
 /* End of standalone components */
@@ -71,24 +88,5 @@ typedef enum {
   COMPONENTS_COUNT
 } components_e;
 
-sprite_component_t *componentsNewSprite(
-    position_component_t position,
-    size_component_t size,
-    uint64_t entity_id,
-    char *texture
-);
 
-physics_body_component_t *componentsNewPhysicsBody(
-    void *shape,
-    bool is_circular,
-    uint64_t entity_id
-);
-
-transform_component_t *componentsNewTransformComponent(
-    position_component_t position,
-    velocity_component_t velocity,
-    uint64_t entity_id
-);
-
-
-#endif // !COMPONENTS_H
+#endif// !COMPONENTS_H
