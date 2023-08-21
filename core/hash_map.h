@@ -5,7 +5,7 @@
 #ifndef FRANKENSTEIN_HASH_MAP_H
 #define FRANKENSTEIN_HASH_MAP_H
 
-#include <stddef.h>
+#include <cstddef>
 #include "vector.h"
 
 #define DEFAULT_BUFFER 1024
@@ -18,9 +18,9 @@ typedef struct hash_map{
   node map[DEFAULT_BUFFER];
 } hash_map;
 
-hash_map *hash_map__new();
-void hash_map__insert(hash_map *self, uint64_t key, void *value);
-void *hash_map__get(hash_map *self, uint64_t key);
-void hash_map__drop(hash_map *self);
+hash_map *hashMapNew();
+void hashMapInsert(hash_map *self, uint64_t key, void *value);
+void *hashMapGet(hash_map *self, uint64_t key);
+void hashMapDrop(hash_map *self);
 
 #endif //FRANKENSTEIN_HASH_MAP_H

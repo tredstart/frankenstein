@@ -8,18 +8,18 @@ short hash(uint64_t id) {
   return (short) (id % DEFAULT_BUFFER);
 }
 
-hash_map *hash_map__new() {
-  hash_map *map = calloc(1, sizeof(*map));
+hash_map *hashMapNew() {
+  hash_map *map = static_cast<hash_map *>(calloc(1, sizeof(*map)));
   if (!map)
     throw_error("Error! Cannot create map");
   return map;
 }
 
-void hash_map__insert(hash_map *self, uint64_t key, void *value) {
+void hashMapInsert(hash_map *self, uint64_t key, void *value) {
   self->map[hash(key)].value = value;
 }
 
-void *hash_map__get(hash_map *self, uint64_t key) {
+void *hashMapGet(hash_map *self, uint64_t key) {
   return self->map[hash(key)].value;
 }
 

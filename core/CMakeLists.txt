@@ -1,6 +1,6 @@
 target_sources(
         frankenstein PUBLIC
-        vector.c vector.h
-        utils.c utils.h
-        hash_map.c hash_map.h
+        vector.cpp vector.h
+        utils.cpp utils.h
+        hash_map.cpp hash_map.h
 )

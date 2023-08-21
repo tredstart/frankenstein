@@ -20,10 +20,10 @@ typedef struct engine_s {
   hash_map *entities;
 } engine_s;
 
-engine_s *engine__new();
+engine_s *engineNew();
 
-void engine__add_component(engine_s *self, void *component, components_e index);
+void engineAddComponent(engine_s *self, void *component, components_e index);
 
-void engine__drop(engine_s *engine);
+void engineDrop(engine_s *engine);
 
 #endif // FRANKENSTEIN_ENGINE_H

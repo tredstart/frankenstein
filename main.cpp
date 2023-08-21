@@ -6,7 +6,7 @@
 
 int main() {
 
-  engine_s *engine = engine__new();
+  engine_s *engine = engineNew();
 
   for (int i = 0; i < 60; i++) {
     SDL_SetRenderDrawColor(engine->renderer, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -19,7 +19,7 @@ int main() {
   SDL_DestroyRenderer(engine->renderer);
   SDL_DestroyWindow(engine->screen);
   // Quit SDL
-  engine__drop(engine);
+  engineDrop(engine);
   SDL_Quit();
 
   return 0;

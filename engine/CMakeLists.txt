@@ -1,1 +1,1 @@
-target_sources(frankenstein PUBLIC engine.c engine.h consts.h)
+target_sources(frankenstein PUBLIC engine.cpp engine.h consts.h)

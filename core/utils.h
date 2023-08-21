@@ -4,8 +4,8 @@
 
 #ifndef FRANKENSTEIN_UTILS_H
 #define FRANKENSTEIN_UTILS_H
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 void throw_error(const char *msg);
 
 #endif // FRANKENSTEIN_UTILS_H

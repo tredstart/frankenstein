@@ -1,7 +1,6 @@
 #ifndef COMPONENTS_H
 
 #include <SDL2/SDL_rect.h>
-#include <stdbool.h>
 #include "../core/utils.h"
 /*  Not standalone components  */
 //
@@ -72,20 +71,20 @@ typedef enum {
   COMPONENTS_COUNT
 } components_e;
 
-sprite_component_t *components__new_sprite(
+sprite_component_t *componentsNewSprite(
     position_component_t position,
     size_component_t size,
     uint64_t entity_id,
     char *texture
 );
 
-physics_body_component_t *components__new_physics_body(
+physics_body_component_t *componentsNewPhysicsBody(
     void *shape,
     bool is_circular,
     uint64_t entity_id
 );
 
-transform_component_t *components__new_transform_component(
+transform_component_t *componentsNewTransformComponent(
     position_component_t position,
     velocity_component_t velocity,
     uint64_t entity_id

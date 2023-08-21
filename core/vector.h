@@ -5,8 +5,8 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
-#include <stddef.h>
-#include <stdint.h>
+#include <cstddef>
+#include <cstdint>
 #include "../core/utils.h"
 
 typedef struct item {
@@ -20,12 +20,12 @@ typedef struct {
   uint64_t count;
 } vector;
 
-vector *vector__new(void *value);
+vector *vectorNew(void *value);
 
-void vector__add(vector *self, void *new);
+void vectorAdd(vector *self, void *value);
 
-void vector__drop(vector *self);
+void vectorDrop(vector *self);
 
-void *vector__get(vector *self, uint64_t index);
+void *vectorGet(vector *self, uint64_t index);
 
 #endif // VECTOR_H
