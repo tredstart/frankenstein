@@ -18,13 +18,12 @@ private:
   const std::string resources = "test_assets/resources/";
 public:
   Engine();
-  void addComponent(IComponent *component, components_e index);
   void readScene(int index = 0);
   ~Engine();
 
   SDL_Renderer *renderer{};
   SDL_Window *screen;
-  std::vector<IComponent *> components[COMPONENTS_COUNT];
+  std::unordered_map<std::string, std::vector<IComponent *>> components;
   std::unordered_map<uint64_t, Entity *> entities;
 };
 #endif// FRANKENSTEIN_ENGINE_H

@@ -2,7 +2,9 @@
 #define COMPONENTS_H
 
 #include <cstdint>
+#include <functional>
 #include <string>
+#include <toml/value.hpp>
 #include <unordered_map>
 #include <vector>
 class IComponent {
@@ -55,17 +57,15 @@ public:
   size_component_t size{};
   uint64_t entity_id;
   char *texture;
-  SpriteComponent(position_component_t position, size_component_t size,
-                  uint64_t entity_id, char *texture);
+  SpriteComponent(toml::table config, uint64_t entity_id);
   ~SpriteComponent() override = default;
 };
 
 class PhysicsBodyComponent : public IComponent {
 public:
   collider_component_t collider{};
-  bool is_circular;
   uint64_t entity_id;
-  PhysicsBodyComponent(rect_t shape, bool is_circular, uint64_t entity_id);
+  PhysicsBodyComponent(toml::table config, uint64_t entity_id);
   ~PhysicsBodyComponent() override = default;
 };
 
@@ -74,22 +74,15 @@ public:
   position_component_t position{};
   velocity_component_t velocity{};
   uint64_t entity_id;
-  TransformComponent(position_component_t position,
-                     velocity_component_t velocity, uint64_t entity_id);
+  TransformComponent(toml::table config, uint64_t entity_id);
   ~TransformComponent() override = default;
 };
 
 //
 /* End of standalone components */
 
-typedef enum {
-  Transform,
-  Sprite,
-  PhysicsBody,
-
-  COMPONENTS_COUNT
-} components_e;
-
-
+extern const std::unordered_map<
+    std::string, std::function<IComponent*(toml::table, uint64_t)>>
+    COMPONENTS_MAP;
 
 #endif// !COMPONENTS_H

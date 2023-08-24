@@ -8,7 +8,7 @@ int main() {
 
   auto *engine = new Engine;
   Systems systems;
-  for (int i = 0; i < 60; i++) {
+  for (int i = 0; i < 100; i++) {
     SDL_SetRenderDrawColor(engine->renderer, 0xFF, 0xFF, 0xFF, 0xFF);
     SDL_RenderClear(engine->renderer);
     // [WIP] delta time should be passed to update instead of magic number
