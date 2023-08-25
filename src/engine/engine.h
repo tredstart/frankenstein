@@ -15,7 +15,7 @@ private:
   void loadScenes();
   void parseEntity(const std::string& name) ;
   std::vector<std::string> scenes;
-  const std::string resources = "test_assets/resources/";
+  const std::string resources = "../../test_assets/resources/";
 public:
   Engine();
   void readScene(int index = 0);

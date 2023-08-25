@@ -4,9 +4,9 @@
 
 #include "engine.h"
 #include "consts.h"
+#include "toml.hpp"
 #include <SDL2/SDL.h>
 #include <functional>
-#include <toml.hpp>
 
 Engine::Engine() {
   this->screen = nullptr;
@@ -36,7 +36,7 @@ void Engine::loadScenes() {
 
 void Engine::readScene(int index) {
   std::string path = resources + scenes[index];
-  auto data = toml::parse(path + "/" + "scene.toml");
+  auto data = toml::parse(path + "/" + "blueprint.toml");
   const auto &entitiesArray = data["entities"].as_array();
   for (const auto &entity: entitiesArray) {
     std::string entity_name = entity.as_string();

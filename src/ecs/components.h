@@ -1,10 +1,10 @@
 #ifndef COMPONENTS_H
 #define COMPONENTS_H
 
+#include "toml/value.hpp"
 #include <cstdint>
 #include <functional>
 #include <string>
-#include <toml/value.hpp>
 #include <unordered_map>
 #include <vector>
 class IComponent {
