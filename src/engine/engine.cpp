@@ -85,10 +85,9 @@ void insertVectorToMap(
   components[componentTypeStr].push_back(newComponent);
 }
 void Engine::run() {
-  if (components.empty()) {
-    Logger::error("Cannot run the engine. Components are empty.");
-
-    exit(EXIT_FAILURE);
+  if (components.empty() || entities.empty()) {
+    Logger::error("Cannot run the engine. Components or entities are empty.");
+    throw std::runtime_error("Please check the config.");
   }
 
   for (int i = 0; i < 100; i++) {

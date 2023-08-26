@@ -20,7 +20,7 @@ private:
   std::string resources;
 public:
 
-  explicit Engine(const std::string& resources = "../../test_assets/noScenes/");
+  explicit Engine(const std::string& resources = "../../test_assets/resources/");
   void readScene(int index = 0);
   void run();
   ~Engine();
