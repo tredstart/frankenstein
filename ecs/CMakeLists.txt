@@ -1,1 +1,0 @@
-target_sources(frankenstein PUBLIC components.c components.h systems.c systems.h consts.h entity.h)

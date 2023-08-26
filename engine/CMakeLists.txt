@@ -1,1 +1,0 @@
-target_sources(frankenstein PUBLIC engine.c engine.h consts.h)
