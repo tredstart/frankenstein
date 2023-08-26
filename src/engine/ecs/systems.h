@@ -24,7 +24,6 @@ class Systems {
 private:
   std::vector<UPDATE_METHOD *> systems{&render_system, &physics_system,
                                        &movement_system};
-
 public:
   Systems() = default;
   ~Systems() = default;
