@@ -3,9 +3,14 @@
 //
 
 #include "utils.h"
+#include <chrono>
 #include <iostream>
 
-void throw_error(const char *msg) {
-  std::cerr << msg << std::endl;
-  exit(EXIT_FAILURE);
+void Logger::error(const std::string &msg) {
+  std::cerr << "[ERROR " << std::chrono::system_clock::now() << "] " << msg
+            << std::endl;
+}
+void Logger::info(const std::string &msg) {
+  std::cout << "[INFO " << std::chrono::system_clock::now() << "] " << msg
+            << std::endl;
 }

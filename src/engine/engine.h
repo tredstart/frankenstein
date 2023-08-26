@@ -6,19 +6,23 @@
 #define FRANKENSTEIN_ENGINE_H
 
 #include "ecs/entity.h"
+#include "ecs/systems.h"
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
 #include <string>
 #include <unordered_map>
 class Engine {
 private:
+  Systems systems;
   void loadScenes();
   void parseEntity(const std::string& name) ;
   std::vector<std::string> scenes;
-  const std::string resources = "../../test_assets/resources/";
+  std::string resources;
 public:
-  Engine();
+
+  explicit Engine(const std::string& resources = "../../test_assets/noScenes/");
   void readScene(int index = 0);
+  void run();
   ~Engine();
 
   SDL_Renderer *renderer{};

@@ -1,4 +1,5 @@
 #include "components.h"
+#include "../core/utils.h"
 #include "toml/get.hpp"
 #include <utility>
 
@@ -20,6 +21,7 @@ const std::unordered_map<std::string,
     };
 
 SpriteComponent::SpriteComponent(toml::table config, uint64_t entity_id) {
+  Logger::info("Creating SpriteComponent");
   auto position_table = config.find("position");
   auto size_table = config.find("size");
   position = {find(position_table->second, "x").as_floating(),
@@ -35,7 +37,7 @@ SpriteComponent::SpriteComponent(toml::table config, uint64_t entity_id) {
 
 PhysicsBodyComponent::PhysicsBodyComponent(toml::table config,
                                            uint64_t entity_id) {
-
+  Logger::info("Creating PhysicsBodyComponents");
   // todo: will be overhauled by incoming changes in physics system
   auto position_table = config.find("position");
   auto size_table = config.find("size");
@@ -47,7 +49,7 @@ PhysicsBodyComponent::PhysicsBodyComponent(toml::table config,
 }
 
 TransformComponent::TransformComponent(toml::table config, uint64_t entity_id) {
-
+  Logger::info("Creating TransformComponent");
   auto position_table = config.find("position");
   auto velocity_table = config.find("velocity");
   position = {find(position_table->second, "x").as_floating(),
