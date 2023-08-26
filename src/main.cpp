@@ -1,6 +1,6 @@
 
 
-#include "ecs/systems.h"
+#include "engine/ecs/systems.h"
 #include "engine/engine.h"
 #include <SDL2/SDL.h>
 #include <csignal>
@@ -12,7 +12,11 @@ int main() {
     SDL_SetRenderDrawColor(engine->renderer, 0xFF, 0xFF, 0xFF, 0xFF);
     SDL_RenderClear(engine->renderer);
     // [WIP] delta time should be passed to update instead of magic number
-    systems.update(engine, 1);
+    systems.update({
+                       engine->components,
+                       engine->entities,
+                       engine->renderer
+                   }, 1);
     SDL_RenderPresent(engine->renderer);
     usleep(15000);
   }

@@ -6,9 +6,9 @@
 void apply_transform(position_component_t *position,
                      velocity_component_t velocity, float dt);
 
-void render_system(Engine *engine, float dt) {
-  std::vector<IComponent *> components = engine->components["Sprite"];
-  SDL_Renderer *renderer = engine->renderer;
+void render_system(Context context, float dt) {
+  std::vector<IComponent *> components = context.components["Sprite"];
+  SDL_Renderer *renderer = context.renderer;
   for (int i = 0; i < components.size(); ++i) {
     auto sprite = dynamic_cast<SpriteComponent *>(components[i]);
     SDL_Rect rect;
@@ -22,14 +22,14 @@ void render_system(Engine *engine, float dt) {
 }
 
 /* [WIP] */
-void physics_system(Engine *engine, float dt) {
-  std::vector<IComponent *> components = engine->components["PhysicsBody"];
+void physics_system(Context context, float dt) {
+  std::vector<IComponent *> components = context.components["PhysicsBody"];
   for (int i = 0; i < components.size() - 1; ++i) {
     for (int j = 1; j < components.size(); ++j) {
       auto collider1 = dynamic_cast<PhysicsBodyComponent *>(components[i]);
       auto collider2 = dynamic_cast<PhysicsBodyComponent *>(components[j]);
       if (collides(&collider1->collider, &collider2->collider)) {
-        Entity *entity = engine->entities.at(collider1->entity_id);
+        Entity *entity = context.entities.at(collider1->entity_id);
         auto transform = dynamic_cast<TransformComponent *>(
             entity->components["Transform"][0]);
 
@@ -50,11 +50,11 @@ void physics_system(Engine *engine, float dt) {
   }
 }
 
-void movement_system(Engine *engine, float dt) {
-  std::vector<IComponent *> components = engine->components["Transform"];
+void movement_system(Context context, float dt) {
+  std::vector<IComponent *> components = context.components["Transform"];
   for (auto &component: components) {
     auto transform = dynamic_cast<TransformComponent *>(component);
-    Entity *entity = engine->entities.at(transform->entity_id);
+    Entity *entity = context.entities.at(transform->entity_id);
     std::vector<IComponent *> sprites = entity->components["Sprite"];
     auto physics_body = dynamic_cast<PhysicsBodyComponent *>(
         entity->components["PhysicsBody"][0]);
@@ -88,6 +88,6 @@ bool collides(collider_component_t *collider1,
 }
 
 
-void Systems::update(Engine *engine, float dt) {
-  for (auto &update: systems) (*update)(engine, dt);
+void Systems::update(Context context, float dt) {
+  for (auto &update: systems) (*update)(context, dt);
 }

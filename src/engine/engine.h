@@ -5,7 +5,7 @@
 #ifndef FRANKENSTEIN_ENGINE_H
 #define FRANKENSTEIN_ENGINE_H
 
-#include "../ecs/entity.h"
+#include "ecs/entity.h"
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
 #include <string>

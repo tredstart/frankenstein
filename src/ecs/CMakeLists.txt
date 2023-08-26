@@ -1,1 +1,0 @@
-target_sources(frankenstein PUBLIC components.cpp components.h systems.cpp systems.h entity.h)

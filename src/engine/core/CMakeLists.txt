@@ -1,4 +1,4 @@
 target_sources(
-        frankenstein PUBLIC
+        engine PUBLIC
         utils.cpp utils.h
 )
