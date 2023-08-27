@@ -16,6 +16,8 @@ void insertVectorToMap(
 Engine::Engine(const std::string &resources) {
   this->resources = resources;
   this->screen = nullptr;
+  b2Vec2 gravity(0.0f, 10.0f);
+  world = new b2World(gravity);
   loadScenes();
   SDL_Init(SDL_INIT_EVERYTHING);
   SDL_CreateWindowAndRenderer(WIDTH, HEIGHT, SDL_WINDOW_SHOWN, &screen,
@@ -29,6 +31,7 @@ Engine::~Engine() {
   for (auto &entity: entities) { delete entity.second; }
   for (auto &componentType: components)
     for (auto &component: componentType.second) delete component;
+  delete world;
   SDL_Quit();
 }
 
@@ -88,12 +91,15 @@ void Engine::run() {
     Logger::error("Cannot run the engine. Components or entities are empty.");
     throw std::runtime_error("Please check the config.");
   }
-
-  for (int i = 0; i < 100; i++) {
+  for (auto & physics_body : components["PhysicsBody"]) {
+    auto physicsBody = dynamic_cast<PhysicsBodyComponent*>(physics_body);
+    physicsBody->createBodyInWorld(world);
+  }
+  for (int i = 0; i < 200; i++) {
     SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
     SDL_RenderClear(renderer);
     // [WIP] delta time should be passed to update instead of magic number
-    systems.update({components, entities, renderer}, 1);
+    systems.update({components, entities, renderer, world}, 1);
     SDL_RenderPresent(renderer);
     usleep(15000);
   }

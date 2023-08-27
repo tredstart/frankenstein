@@ -6,10 +6,6 @@
 const std::unordered_map<std::string,
                          std::function<IComponent*(toml::table, uint64_t)>>
     COMPONENTS_MAP{
-        {"Transform",
-         [](toml::table config, uint64_t entity_id) {
-           return new TransformComponent(std::move(config), entity_id);
-         }},
         {"Sprite",
          [](toml::table config, uint64_t entity_id) {
            return new SpriteComponent(std::move(config), entity_id);
@@ -38,23 +34,27 @@ SpriteComponent::SpriteComponent(toml::table config, uint64_t entity_id) {
 PhysicsBodyComponent::PhysicsBodyComponent(toml::table config,
                                            uint64_t entity_id) {
   Logger::info("Creating PhysicsBodyComponents");
-  // todo: will be overhauled by incoming changes in physics system
-  auto position_table = config.find("position");
-  auto size_table = config.find("size");
-  collider.rect.position = {find(position_table->second, "x").as_floating(),
-                            find(position_table->second, "y").as_floating()};
-  collider.rect.size = {find(size_table->second, "width").as_floating(),
-                        find(size_table->second, "height").as_floating()};
+  auto position_table = config["position"].as_table();
+  auto size_table = config["size"].as_table();
+  auto density = static_cast<float>(config["density"].as_floating());
+  auto friction = static_cast<float>(config["friction"].as_floating());
+
+  auto x = static_cast<float>(position_table["x"].as_floating());
+  auto y = static_cast<float>(position_table["y"].as_floating());
+
+  auto width = static_cast<float>(size_table["width"].as_floating());
+  auto height = static_cast<float>(size_table["height"].as_floating());
+
+  fixtureDefinition.density = density;
+  fixtureDefinition.friction = friction;
+  bodyDefinition.position.Set(x, y);
+  shape.SetAsBox(width, height);
+  fixtureDefinition.shape = &shape;
   this->entity_id = entity_id;
 }
-
-TransformComponent::TransformComponent(toml::table config, uint64_t entity_id) {
-  Logger::info("Creating TransformComponent");
-  auto position_table = config.find("position");
-  auto velocity_table = config.find("velocity");
-  position = {find(position_table->second, "x").as_floating(),
-              find(position_table->second, "y").as_floating()};
-  velocity = {find(velocity_table->second, "x").as_floating(),
-              find(velocity_table->second, "y").as_floating()};
-  this->entity_id = entity_id;
+void PhysicsBodyComponent::createBodyInWorld(b2World *world) {
+  if (fixtureDefinition.density != 0.0f )
+    bodyDefinition.type = b2_dynamicBody;
+  body = world->CreateBody(&bodyDefinition);
+  body->CreateFixture(&fixtureDefinition);
 }

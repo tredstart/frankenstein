@@ -3,9 +3,6 @@
 //
 #include "systems.h"
 
-void apply_transform(position_component_t *position,
-                     velocity_component_t velocity, float dt);
-
 void render_system(Context context, float dt) {
   std::vector<IComponent *> components = context.components["Sprite"];
   SDL_Renderer *renderer = context.renderer;
@@ -23,68 +20,21 @@ void render_system(Context context, float dt) {
 
 /* [WIP] */
 void physics_system(Context context, float dt) {
-  std::vector<IComponent *> components = context.components["PhysicsBody"];
-  for (int i = 0; i < components.size() - 1; ++i) {
-    for (int j = 1; j < components.size(); ++j) {
-      auto collider1 = dynamic_cast<PhysicsBodyComponent *>(components[i]);
-      auto collider2 = dynamic_cast<PhysicsBodyComponent *>(components[j]);
-      if (collides(&collider1->collider, &collider2->collider)) {
-        Entity *entity = context.entities.at(collider1->entity_id);
-        auto transform = dynamic_cast<TransformComponent *>(
-            entity->components["Transform"][0]);
-
-        velocity_component_t velocity = {.x = -transform->velocity.x,
-                                         .y = -transform->velocity.y};
-
-        apply_transform(&transform->position, velocity, dt);
-
-        apply_transform(&collider1->collider.rect.position, velocity, dt);
-
-        std::vector<IComponent *> sprites = entity->components["Sprite"];
-        for (auto &k: sprites) {
-          auto sprite = dynamic_cast<SpriteComponent *>(k);
-          apply_transform(&sprite->position, velocity, dt);
-        }
-      }
-    }
-  }
-}
-
-void movement_system(Context context, float dt) {
-  std::vector<IComponent *> components = context.components["Transform"];
-  for (auto &component: components) {
-    auto transform = dynamic_cast<TransformComponent *>(component);
-    Entity *entity = context.entities.at(transform->entity_id);
-    std::vector<IComponent *> sprites = entity->components["Sprite"];
+  // time step, velocity iterations, position iterations
+  context.world->Step(dt, 2, 6);
+  for (auto &entity: context.entities) {
+    std::vector<IComponent *> sprite_components =
+        entity.second->components["Sprite"];
+    // let's assume in the beginning that we will have only one physics body per
+    // entity
     auto physics_body = dynamic_cast<PhysicsBodyComponent *>(
-        entity->components["PhysicsBody"][0]);
-    for (auto &j: sprites) {
-      auto sprite = dynamic_cast<SpriteComponent *>(j);
-      apply_transform(&sprite->position, transform->velocity, dt);
+        entity.second->components["PhysicsBody"].front());
+    for (auto &sprite_component: sprite_components) {
+      auto spriteComponent = dynamic_cast<SpriteComponent *>(sprite_component);
+      spriteComponent->position.x = physics_body->body->GetPosition().x;
+      spriteComponent->position.y = physics_body->body->GetPosition().y;
     }
-    apply_transform(&transform->position, transform->velocity, dt);
-    apply_transform(&physics_body->collider.rect.position, transform->velocity,
-                    dt);
   }
-}
-
-void apply_transform(position_component_t *position,
-                     velocity_component_t velocity, float dt) {
-  position->x += velocity.x * dt;
-  position->y += velocity.y * dt;
-}
-
-bool collides(collider_component_t *collider1,
-              collider_component_t *collider2) {
-
-  return (collider1->rect.position.x <
-              collider2->rect.position.x + collider2->rect.size.width &&
-          collider1->rect.position.x + collider1->rect.size.width >
-              collider2->rect.position.x &&
-          collider1->rect.position.y <
-              collider2->rect.position.y + collider2->rect.size.height &&
-          collider1->rect.position.y + collider1->rect.size.height >
-              collider2->rect.position.y);
 }
 
 
