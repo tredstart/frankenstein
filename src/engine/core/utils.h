@@ -12,4 +12,7 @@ public:
   static void error(const std::string &msg);
 };
 
+float toPixels(float inMeters);
+float toMeters(float inPixels);
+
 #endif// FRANKENSTEIN_UTILS_H

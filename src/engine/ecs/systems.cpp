@@ -2,6 +2,7 @@
 // Created by redstart on 8/3/23.
 //
 #include "systems.h"
+#include "../core/utils.h"
 
 void render_system(Context context, float dt) {
   std::vector<IComponent *> components = context.components["Sprite"];
@@ -31,8 +32,8 @@ void physics_system(Context context, float dt) {
         entity.second->components["PhysicsBody"].front());
     for (auto &sprite_component: sprite_components) {
       auto spriteComponent = dynamic_cast<SpriteComponent *>(sprite_component);
-      spriteComponent->position.x = physics_body->body->GetPosition().x;
-      spriteComponent->position.y = physics_body->body->GetPosition().y;
+      spriteComponent->position.x = toPixels(physics_body->body->GetPosition().x);
+      spriteComponent->position.y = toPixels(physics_body->body->GetPosition().y);
     }
   }
 }

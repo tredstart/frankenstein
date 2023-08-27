@@ -47,8 +47,8 @@ PhysicsBodyComponent::PhysicsBodyComponent(toml::table config,
 
   fixtureDefinition.density = density;
   fixtureDefinition.friction = friction;
-  bodyDefinition.position.Set(x, y);
-  shape.SetAsBox(width, height);
+  bodyDefinition.position.Set(toMeters(x), toMeters(y));
+  shape.SetAsBox(toMeters(width/2), toMeters(height/2));
   fixtureDefinition.shape = &shape;
   this->entity_id = entity_id;
 }

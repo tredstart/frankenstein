@@ -16,7 +16,7 @@ void insertVectorToMap(
 Engine::Engine(const std::string &resources) {
   this->resources = resources;
   this->screen = nullptr;
-  b2Vec2 gravity(0.0f, 10.0f);
+  b2Vec2 gravity(0.0f, toMeters(10.0f));
   world = new b2World(gravity);
   loadScenes();
   SDL_Init(SDL_INIT_EVERYTHING);
@@ -95,11 +95,11 @@ void Engine::run() {
     auto physicsBody = dynamic_cast<PhysicsBodyComponent*>(physics_body);
     physicsBody->createBodyInWorld(world);
   }
-  for (int i = 0; i < 200; i++) {
+  for (int i = 0; i < 100; i++) {
     SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
     SDL_RenderClear(renderer);
     // [WIP] delta time should be passed to update instead of magic number
-    systems.update({components, entities, renderer, world}, 1);
+    systems.update({components, entities, renderer, world}, 0.2f);
     SDL_RenderPresent(renderer);
     usleep(15000);
   }

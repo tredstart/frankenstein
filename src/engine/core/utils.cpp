@@ -14,3 +14,10 @@ void Logger::info(const std::string &msg) {
   std::cout << "[INFO " << std::chrono::system_clock::now() << "] " << msg
             << std::endl;
 }
+float toPixels(float inMeters) {
+  return 50.0f * inMeters;
+}
+
+float toMeters(float inPixels) {
+  return .02f * inPixels;
+}
