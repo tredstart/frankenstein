@@ -7,26 +7,27 @@
 
 void render_system(Context context, [[maybe_unused]] float dt) {
   std::vector<IComponent *> components = context.components["Sprite"];
-  for (auto & component : components) {
+  for (auto &component: components) {
     auto sprite = dynamic_cast<SpriteComponent *>(component);
     context.window->draw(sprite->sprite);
   }
 }
 
-//void render_debug_system(Context context, float dt) {
-//  std::vector<IComponent *> components = context.components["Sprite"];
-//  SDL_Renderer *renderer = context.renderer;
-//  for (int i = 0; i < components.size(); ++i) {
-//    auto sprite = dynamic_cast<SpriteComponent *>(components[i]);
-//    SDL_Rect rect;
-//    SDL_SetRenderDrawColor(renderer, 0, 255 * i, 255, 255);
-////    rect.h = sprite->size.height;
-////    rect.w = sprite->size.width;
-////    rect.x = sprite->position.x;
-////    rect.y = sprite->position.y;
-//    SDL_RenderFillRect(renderer, &rect);
-//  }
-//}
+void render_debug_system(const PhysicsBodyComponent &physics_body,
+                         sf::RenderWindow *window) {
+  sf::Vector2f position;
+  position.x = physics_body.body->GetPosition().x;
+  position.y = physics_body.body->GetPosition().y;
+  sf::VertexArray collider(sf::Quads);
+  for (int i = 0; i < physics_body.shape.m_count; ++i) {
+    b2Vec2 vertex = physics_body.shape.m_vertices[i];
+    sf::Vector2f translatedVector = sf::Vector2f(vertex.x, vertex.y) + position;
+    collider.append(
+        sf::Vertex(translatedVector, sf::Color(0, 150, 150, 128)));
+  }
+  collider.setPrimitiveType(sf::Quads);
+  window->draw(collider);
+}
 
 /* [WIP] */
 void physics_system(Context context, float dt) {
@@ -44,6 +45,7 @@ void physics_system(Context context, float dt) {
       auto spriteComponent = dynamic_cast<SpriteComponent *>(sprite_component);
       spriteComponent->sprite.setPosition(position.x, position.y);
     }
+    render_debug_system(*physics_body, context.window);
   }
 }
 

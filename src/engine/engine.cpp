@@ -7,6 +7,7 @@
 #include "core/utils.h"
 #include "toml.hpp"
 #include <functional>
+#include <iostream>
 
 void parsingError(const std::string &msg, const std::string &path);
 void insertVectorToMap(
@@ -15,7 +16,7 @@ void insertVectorToMap(
 
 Engine::Engine(const std::string &resources) {
   this->resources = resources;
-  b2Vec2 gravity(0.0f, toMeters(10.0f));
+  b2Vec2 gravity(0.0f, 10.0f);
   world = new b2World(gravity);
   window = new sf::RenderWindow(sf::VideoMode(WIDTH, HEIGHT), "SFML works!");
   loadScenes();
@@ -95,11 +96,20 @@ void Engine::run() {
     auto sprite = dynamic_cast<SpriteComponent*>(sprites);
     sprite->loadTexture(resources);
   }
-  for (int i = 0; i < 100; i++) {
-    window->clear();
+  auto lastFrameTime = std::chrono::high_resolution_clock::now();
+  while (window->isOpen()) {
+    sf::Event event{};
+    while (window->pollEvent(event))
+    {
+      if (event.type == sf::Event::Closed)
+        window->close();
+    }
+    auto currentFrameTime = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<float> deltaTime = currentFrameTime - lastFrameTime;
+    window->clear(sf::Color::White);
     // [WIP] delta time should be passed to update instead of magic number
-    systems.update({components, entities, window, world}, 0.2f);
+    systems.update({components, entities, window, world}, deltaTime.count());
     window->display();
-    usleep(15000);
+    lastFrameTime = currentFrameTime;
   }
 }
