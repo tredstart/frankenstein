@@ -3,6 +3,8 @@
 #include "toml/get.hpp"
 #include <utility>
 
+inline float getHalfSize(int extent);
+
 const std::unordered_map<std::string,
                          std::function<IComponent *(toml::table, uint64_t)>>
     COMPONENTS_MAP{
@@ -32,6 +34,18 @@ void SpriteComponent::loadTexture(const std::string &resources) {
   sprite.setTexture(texture);
 }
 
+void SpriteComponent::setPosition(sf::Vector2f new_position) {
+  float new_x =
+      toPixels(new_position.x) - getHalfSize(sprite.getTextureRect().width);
+  float new_y =
+      toPixels(new_position.y) - getHalfSize(sprite.getTextureRect().height);
+  sf::Vector2f position(new_x, new_y);
+  sprite.setPosition(position);
+}
+
+inline float getHalfSize(int extent) {
+  return static_cast<float>(extent) / 2.0f;
+}
 
 PhysicsBodyComponent::PhysicsBodyComponent(toml::table config,
                                            uint64_t entity_id) {
@@ -49,8 +63,8 @@ PhysicsBodyComponent::PhysicsBodyComponent(toml::table config,
 
   fixtureDefinition.density = density;
   fixtureDefinition.friction = friction;
-  bodyDefinition.position.Set(x, y);
-  shape.SetAsBox(width, height);
+  bodyDefinition.position.Set(toMeters(x), toMeters(y));
+  shape.SetAsBox(toMeters(width), toMeters(height));
   fixtureDefinition.shape = &shape;
   this->entity_id = entity_id;
 }

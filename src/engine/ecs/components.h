@@ -44,6 +44,7 @@ public:
   ~SpriteComponent() override = default;
 
   void loadTexture(const std::string &resources);
+  void setPosition(sf::Vector2f new_position);
 };
 
 class PhysicsBodyComponent : public IComponent {

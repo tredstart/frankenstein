@@ -13,6 +13,18 @@ public:
 };
 
 float toPixels(float inMeters);
+
+template<typename T>
+T toPixels(T vector) {
+  return T(toPixels(vector.x), toPixels(vector.y));
+}
+
 float toMeters(float inPixels);
+
+// returns a cast vector from T to N
+template<typename N, typename T>
+N as_vector(const T &old_vector) {
+  return N(old_vector.x, old_vector.y);
+}
 
 #endif// FRANKENSTEIN_UTILS_H
