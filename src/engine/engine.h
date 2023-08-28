@@ -8,10 +8,9 @@
 #include "box2d/box2d.h"
 #include "ecs/entity.h"
 #include "ecs/systems.h"
-#include <SDL2/SDL_render.h>
-#include <SDL2/SDL_video.h>
 #include <string>
 #include <unordered_map>
+#include "SFML/Graphics.hpp"
 
 class Engine {
 private:
@@ -28,8 +27,8 @@ public:
   void run();
   ~Engine();
 
-  SDL_Renderer *renderer{};
-  SDL_Window *screen;
+  sf::RenderWindow *window;
+  bool debug = true;
   std::unordered_map<std::string, std::vector<IComponent *>> components;
   std::unordered_map<uint64_t, Entity *> entities;
   b2World *world;

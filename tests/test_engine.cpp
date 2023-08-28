@@ -22,7 +22,7 @@ TEST(FrankensteinEngine, ReadWrongOrEmptyScenesThrowsErrors) {
 TEST(FrankensteinEngine, LoadBadComponentsThrowsErrors) {
   Engine badKeys("../../test_assets/badKeys/");
   Engine badValues("../../test_assets/badValues/");
-  EXPECT_THROW(badKeys.readScene(0), std::out_of_range);
+  EXPECT_THROW(badKeys.readScene(0), toml::type_error);
   EXPECT_THROW(badValues.readScene(0), toml::type_error);
 }
 

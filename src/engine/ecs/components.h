@@ -1,10 +1,9 @@
 #ifndef COMPONENTS_H
 #define COMPONENTS_H
 
+#include "SFML/Graphics.hpp"
 #include "box2d/box2d.h"
 #include "toml/value.hpp"
-#include "SDL2/SDL_render.h"
-#include "SDL2/SDL_surface.h"
 #include <cstdint>
 #include <functional>
 #include <string>
@@ -37,18 +36,14 @@ public:
 
 class SpriteComponent : public IComponent {
 public:
-  SDL_Rect destination;
   std::string texture_path;
-  SDL_Surface* imageSurface{};
-  SDL_Texture *texture{};
+  sf::Texture texture;
+  sf::Sprite sprite;
   uint64_t entity_id;
-  void createTexture(SDL_Renderer *renderer, const std::string& resources);
   SpriteComponent(toml::table config, uint64_t entity_id);
-  ~SpriteComponent() override {
-      SDL_DestroyTexture(texture);
-      SDL_FreeSurface(imageSurface);
-  };
+  ~SpriteComponent() override = default;
 
+  void loadTexture(const std::string &resources);
 };
 
 class PhysicsBodyComponent : public IComponent {

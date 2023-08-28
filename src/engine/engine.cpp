@@ -6,8 +6,8 @@
 #include "consts.h"
 #include "core/utils.h"
 #include "toml.hpp"
-#include <SDL2/SDL.h>
 #include <functional>
+
 void parsingError(const std::string &msg, const std::string &path);
 void insertVectorToMap(
     const std::string &componentTypeStr, IComponent *newComponent,
@@ -15,24 +15,19 @@ void insertVectorToMap(
 
 Engine::Engine(const std::string &resources) {
   this->resources = resources;
-  this->screen = nullptr;
   b2Vec2 gravity(0.0f, toMeters(10.0f));
   world = new b2World(gravity);
+  window = new sf::RenderWindow(sf::VideoMode(WIDTH, HEIGHT), "SFML works!");
   loadScenes();
-  SDL_Init(SDL_INIT_EVERYTHING);
-  SDL_CreateWindowAndRenderer(WIDTH, HEIGHT, SDL_WINDOW_SHOWN, &screen,
-                              &renderer);
 }
 
 Engine::~Engine() {
   Logger::info("Exiting engine.");
-  SDL_DestroyRenderer(renderer);
-  SDL_DestroyWindow(screen);
   for (auto &entity: entities) { delete entity.second; }
   for (auto &componentType: components)
     for (auto &component: componentType.second) delete component;
   delete world;
-  SDL_Quit();
+  delete window;
 }
 
 void Engine::loadScenes() {
@@ -86,6 +81,7 @@ void insertVectorToMap(
     std::unordered_map<std::string, std::vector<IComponent *>> &components) {
   components[componentTypeStr].push_back(newComponent);
 }
+
 void Engine::run() {
   if (components.empty() || entities.empty()) {
     Logger::error("Cannot run the engine. Components or entities are empty.");
@@ -97,14 +93,13 @@ void Engine::run() {
   }
   for (auto & sprites : components["Sprite"]) {
     auto sprite = dynamic_cast<SpriteComponent*>(sprites);
-    sprite->createTexture(renderer, resources);
+    sprite->loadTexture(resources);
   }
   for (int i = 0; i < 100; i++) {
-    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-    SDL_RenderClear(renderer);
+    window->clear();
     // [WIP] delta time should be passed to update instead of magic number
-    systems.update({components, entities, renderer, world}, 0.2f);
-    SDL_RenderPresent(renderer);
+    systems.update({components, entities, window, world}, 0.2f);
+    window->display();
     usleep(15000);
   }
 }

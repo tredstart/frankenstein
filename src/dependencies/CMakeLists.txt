@@ -11,3 +11,10 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(Box2D)
 
+FetchContent_Declare(
+        SFML
+        URL https://github.com/SFML/SFML/archive/refs/tags/2.6.0.zip
+)
+FetchContent_MakeAvailable(SFML)
+
+
