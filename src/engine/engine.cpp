@@ -95,6 +95,10 @@ void Engine::run() {
     auto physicsBody = dynamic_cast<PhysicsBodyComponent*>(physics_body);
     physicsBody->createBodyInWorld(world);
   }
+  for (auto & sprites : components["Sprite"]) {
+    auto sprite = dynamic_cast<SpriteComponent*>(sprites);
+    sprite->createTexture(renderer, resources);
+  }
   for (int i = 0; i < 100; i++) {
     SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
     SDL_RenderClear(renderer);

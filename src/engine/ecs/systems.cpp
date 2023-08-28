@@ -4,17 +4,26 @@
 #include "systems.h"
 #include "../core/utils.h"
 
-void render_system(Context context, float dt) {
+void render_system(Context context, [[maybe_unused]] float dt) {
+  std::vector<IComponent *> components = context.components["Sprite"];
+  SDL_Renderer *renderer = context.renderer;
+  for (auto & component : components) {
+    auto sprite = dynamic_cast<SpriteComponent *>(component);
+    SDL_RenderCopy(renderer, sprite->texture, nullptr, nullptr);
+  }
+}
+
+void render_debug_system(Context context, float dt) {
   std::vector<IComponent *> components = context.components["Sprite"];
   SDL_Renderer *renderer = context.renderer;
   for (int i = 0; i < components.size(); ++i) {
     auto sprite = dynamic_cast<SpriteComponent *>(components[i]);
     SDL_Rect rect;
     SDL_SetRenderDrawColor(renderer, 0, 255 * i, 255, 255);
-    rect.h = sprite->size.height;
-    rect.w = sprite->size.width;
-    rect.x = sprite->position.x;
-    rect.y = sprite->position.y;
+//    rect.h = sprite->size.height;
+//    rect.w = sprite->size.width;
+//    rect.x = sprite->position.x;
+//    rect.y = sprite->position.y;
     SDL_RenderFillRect(renderer, &rect);
   }
 }
@@ -32,8 +41,8 @@ void physics_system(Context context, float dt) {
         entity.second->components["PhysicsBody"].front());
     for (auto &sprite_component: sprite_components) {
       auto spriteComponent = dynamic_cast<SpriteComponent *>(sprite_component);
-      spriteComponent->position.x = toPixels(physics_body->body->GetPosition().x);
-      spriteComponent->position.y = toPixels(physics_body->body->GetPosition().y);
+      spriteComponent->destination.x = toPixels(physics_body->body->GetPosition().x);
+      spriteComponent->destination.y = toPixels(physics_body->body->GetPosition().y);
     }
   }
 }

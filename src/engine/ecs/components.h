@@ -3,11 +3,14 @@
 
 #include "box2d/box2d.h"
 #include "toml/value.hpp"
+#include "SDL2/SDL_render.h"
+#include "SDL2/SDL_surface.h"
 #include <cstdint>
 #include <functional>
 #include <string>
 #include <unordered_map>
 #include <vector>
+
 class IComponent {
 public:
   virtual ~IComponent() = default;
@@ -16,35 +19,15 @@ public:
 
 /*  Not standalone components  */
 //
-typedef struct {
-  double width;
-  double height;
-} size_component_t;
-
-typedef struct {
-  double x;
-  double y;
-} position_component_t;
-
-typedef struct {
-  double x;
-  double y;
-} velocity_component_t;
-
-typedef struct {
-  position_component_t position;
-  size_component_t size;
-} rect_t;
-
-typedef struct {
-  position_component_t position;
-  double radius;
-} circle_t;
-
-typedef struct {
-  rect_t rect;
-  circle_t circle;
-} collider_component_t;
+//typedef struct {
+//  double width;
+//  double height;
+//} size_component_t;
+//
+//typedef struct {
+//  double x;
+//  double y;
+//} position_component_t;
 
 //
 /* End of not standalone components */
@@ -54,12 +37,18 @@ typedef struct {
 
 class SpriteComponent : public IComponent {
 public:
-  position_component_t position{};
-  size_component_t size{};
+  SDL_Rect destination;
+  std::string texture_path;
+  SDL_Surface* imageSurface{};
+  SDL_Texture *texture{};
   uint64_t entity_id;
-  char *texture;
+  void createTexture(SDL_Renderer *renderer, const std::string& resources);
   SpriteComponent(toml::table config, uint64_t entity_id);
-  ~SpriteComponent() override = default;
+  ~SpriteComponent() override {
+      SDL_DestroyTexture(texture);
+      SDL_FreeSurface(imageSurface);
+  };
+
 };
 
 class PhysicsBodyComponent : public IComponent {

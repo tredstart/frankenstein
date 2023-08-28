@@ -16,7 +16,7 @@ typedef struct Context {
   b2World *world;
 } Context;
 
-void render_system(Context context, float dt);
+void render_system(Context context, [[maybe_unused]] float dt);
 void physics_system(Context context, float dt);
 
 typedef void(UPDATE_METHOD)(Context engine, float dt);

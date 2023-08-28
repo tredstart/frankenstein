@@ -2,7 +2,7 @@
 #include "../core/utils.h"
 #include "toml/get.hpp"
 #include <utility>
-
+#include <SDL2/SDL_image.h>
 const std::unordered_map<std::string,
                          std::function<IComponent*(toml::table, uint64_t)>>
     COMPONENTS_MAP{
@@ -18,17 +18,20 @@ const std::unordered_map<std::string,
 
 SpriteComponent::SpriteComponent(toml::table config, uint64_t entity_id) {
   Logger::info("Creating SpriteComponent");
-  auto position_table = config.find("position");
-  auto size_table = config.find("size");
-  position = {find(position_table->second, "x").as_floating(),
-              find(position_table->second, "y").as_floating()};
-  size = {find(size_table->second, "width").as_floating(),
-          find(size_table->second, "height").as_floating()};
+  auto position_table = config["position"];
+
+  // migrate to opengl and see
+//  destination.x = static_cast<float >(position_table["x"].as_floating());
+
+  texture_path = config["texture"].as_string();
+
   this->entity_id = entity_id;
-  // [WIP] for early testing purposes
-  //  if (!sprite->texture)
-  //    throw_error("Error! No texture!");
-  texture = nullptr;
+
+}
+
+void SpriteComponent::createTexture(SDL_Renderer *renderer, const std::string& resources) {
+  imageSurface = IMG_Load((resources + texture_path).c_str());
+  texture = SDL_CreateTextureFromSurface(renderer, imageSurface);
 }
 
 PhysicsBodyComponent::PhysicsBodyComponent(toml::table config,
