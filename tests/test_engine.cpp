@@ -5,6 +5,7 @@
 #include "toml.hpp"
 #include "gtest/gtest.h"
 #include <filesystem>
+#include "sol/sol.hpp"
 
 TEST(FrankensteinEngine, LoadWrongOrEmptyScenesThrowsErrors) {
   EXPECT_THROW(Engine("../../test_assets/emptyResources/"), std::runtime_error);
@@ -49,4 +50,42 @@ TEST(FrankensteinEngine, CannotRunWithoutComponentsOrEntities) {
   engineWithComponents.readScene(0);
   engineWithComponents.entities.clear();
   EXPECT_THROW(engineWithComponents.run(), std::runtime_error);
+}
+
+
+//struct Doge {
+//  int tailwag = 50;
+//
+//  Doge() {
+//  }
+//
+//  Doge(int wags)
+//      : tailwag(wags) {
+//  }
+//
+//  ~Doge() {
+//    std::cout << "Dog at " << this << " is being destroyed..." << std::endl;
+//  }
+//};
+
+class Component {
+public:
+  int value;
+};
+
+TEST(FrankensteinEngine, RunLuaCode) {
+  std::cout << "=== userdata memory reference ===" << std::endl;
+
+  sol::state lua;
+  lua.open_libraries(sol::lib::base);
+  auto component = new Component;
+  component->value = 10;
+  lua["component"] = component;
+  lua.new_usertype<Component>("Component",
+                           "value", &Component::value);
+  for (int i = 0; i < 5; ++i) {
+    lua.script("for i = 1, 2 do component.value = component.value + 1 end");
+    ++component->value;
+  }
+  ASSERT_EQ(component->value, 25);
 }

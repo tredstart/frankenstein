@@ -17,4 +17,14 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(SFML)
 
+FetchContent_Declare(
+        lua
+        URL https://github.com/lua/lua/archive/refs/tags/v5.4.6.tar.gz
+)
+FetchContent_MakeAvailable(lua)
 
+FetchContent_Declare(
+        sol2
+        URL https://github.com/ThePhD/sol2/archive/refs/tags/v3.3.0.tar.gz
+)
+FetchContent_MakeAvailable(sol2)
