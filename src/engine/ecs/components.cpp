@@ -1,7 +1,6 @@
 #include "components.h"
 #include "../core/utils.h"
 #include "toml/get.hpp"
-#include <utility>
 
 inline float getHalfSize(int extent);
 
@@ -15,6 +14,10 @@ const std::unordered_map<std::string,
         {"PhysicsBody",
          [](toml::table config, uint64_t entity_id) {
            return new PhysicsBodyComponent(std::move(config), entity_id);
+         }},
+        {"Script",
+         [](toml::table config, uint64_t entity_id) {
+           return new ScriptComponent(std::move(config), entity_id);
          }},
     };
 
@@ -72,4 +75,14 @@ void PhysicsBodyComponent::createBodyInWorld(b2World *world) {
   if (fixtureDefinition.density != 0.0f) bodyDefinition.type = b2_dynamicBody;
   body = world->CreateBody(&bodyDefinition);
   body->CreateFixture(&fixtureDefinition);
+}
+
+ScriptComponent::ScriptComponent(toml::table config, uint64_t entity_id) {
+  Logger::info("Creating ScriptComponent");
+  script_path = config["script"].as_string();
+  this->entity_id = entity_id;
+}
+void ScriptComponent::loadScript(sol::state &lua) {
+  script = lua.load_file(script_path);
+  // todo: insert error handling
 }

@@ -6,6 +6,7 @@
 #include "toml/value.hpp"
 #include <cstdint>
 #include <functional>
+#include "sol/sol.hpp"
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -59,7 +60,15 @@ public:
   ~PhysicsBodyComponent() override = default;
 };
 
-
+class ScriptComponent : public IComponent {
+public:
+  std::string script_path;
+  sol::load_result script;
+  uint64_t entity_id;
+  ScriptComponent(toml::table config, uint64_t entity_id);
+  void loadScript(sol::state &lua);
+  ~ScriptComponent() override = default;
+};
 
 //
 /* End of standalone components */

@@ -96,6 +96,10 @@ void Engine::run() {
     auto sprite = dynamic_cast<SpriteComponent*>(sprites);
     sprite->loadTexture(resources);
   }
+  for (auto & scripts : components["Script"]) {
+    auto script = dynamic_cast<ScriptComponent*>(scripts);
+    script->loadScript(lua);
+  }
   auto lastFrameTime = std::chrono::high_resolution_clock::now();
   while (window->isOpen()) {
     sf::Event event{};

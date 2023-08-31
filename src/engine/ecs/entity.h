@@ -14,6 +14,10 @@ class Entity {
 public:
   entity_id_t id;
   std::unordered_map<std::string, std::vector<IComponent *>> components;
+  template<class T>
+  auto GetComponent(const std::string &name) {
+    return dynamic_cast<T*>(components[name].front());
+  }
   explicit Entity(entity_id_t id) { this->id = id; }
   ~Entity() = default;
 };

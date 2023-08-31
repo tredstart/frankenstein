@@ -27,7 +27,9 @@ public:
   void run();
   ~Engine();
 
+  sol::state lua;
   sf::RenderWindow *window;
+  // todo: make use of debug
   bool debug = true;
   std::unordered_map<std::string, std::vector<IComponent *>> components;
   std::unordered_map<uint64_t, Entity *> entities;

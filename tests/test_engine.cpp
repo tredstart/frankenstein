@@ -53,31 +53,13 @@ TEST(FrankensteinEngine, CannotRunWithoutComponentsOrEntities) {
 }
 
 
-//struct Doge {
-//  int tailwag = 50;
-//
-//  Doge() {
-//  }
-//
-//  Doge(int wags)
-//      : tailwag(wags) {
-//  }
-//
-//  ~Doge() {
-//    std::cout << "Dog at " << this << " is being destroyed..." << std::endl;
-//  }
-//};
-
 class Component {
 public:
   int value;
 };
 
 TEST(FrankensteinEngine, RunLuaCode) {
-  std::cout << "=== userdata memory reference ===" << std::endl;
-
   sol::state lua;
-  lua.open_libraries(sol::lib::base);
   auto component = new Component;
   component->value = 10;
   lua["component"] = component;
